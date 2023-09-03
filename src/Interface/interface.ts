@@ -7,3 +7,9 @@ export interface IUserDB {
   email: string;
   password: string;
 }
+
+export interface IUserSingUp {
+  email: string;
+  password: string;
+  confirmPassword: string;
+}

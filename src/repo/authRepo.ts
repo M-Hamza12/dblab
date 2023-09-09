@@ -1,24 +1,31 @@
-import { ILogin } from "../Interface/interface";
-import { Response } from "express";
-import { mySqlConnection } from "..";
-export const addUser = (newUser: ILogin, resp: Response) => {
-  mySqlConnection.query(
-    `INSERT INTO signup(email,password) values('${newUser.email}','${newUser.password}')`,
-    (error, rows) => {
-      try {
-        if (error) {
-          console.log(error);
-          throw error;
-        }
-        resp.status(201).json({
-          status: "success",
-        });
-      } catch (error) {
-        resp.status(404).json({
-          status: "fail",
-          message: "Email already in use",
-        });
-      }
-    }
-  );
+import { ILogin, IUserDB } from '../Interface/interface';
+import { Response } from 'express';
+import { mySqlConnection } from '..';
+import { addModel, fetchModel } from './genericRepo';
+import { Query } from '../utils/query';
+let query = new Query();
+
+export const fetchUser = async (user: ILogin): Promise<IUserDB | null> => {
+  let q = query.SELECT(['*'], 'signup') + query.WHERE('email', user.email);
+  try {
+    const user = await fetchModel<IUserDB>(q);
+    return user;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const addUser = async (newUser: ILogin, resp: Response) => {
+  let query = `INSERT INTO signup(email,password) values('${newUser.email}','${newUser.password}')`;
+  try {
+    const message = await addModel(query);
+    resp.status(201).json({
+      status: 'success',
+      message,
+    });
+  } catch (error) {
+    resp.status(400).json({
+      error: error,
+    });
+  }
 };

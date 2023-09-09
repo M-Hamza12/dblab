@@ -41,6 +41,11 @@ export const correctPassword = async (
   enteredPassword: string,
   passwordDB: string
 ) => {
-  // return await bcrypt.compare(enteredPassword, passwordDB);
-  return enteredPassword === passwordDB;
+  return await bcrypt.compare(enteredPassword, passwordDB);
+  // return enteredPassword === passwordDB;
+};
+
+export const hashPassword = async (password: string): Promise<string> => {
+  const encrptedPassword = await bcrypt.hash(password, 10);
+  return encrptedPassword;
 };

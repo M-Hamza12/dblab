@@ -16,7 +16,7 @@ app.use("/api/v1/user", userRouter);
 
 export const mySqlConnection = mysql.createConnection({
   host: "localhost",
-  password: "password",
+  password: "",
   user: "root",
   database: "dblab",
 });

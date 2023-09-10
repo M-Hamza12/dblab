@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { IGuest, ICabin, IBooking } from '../Interface/interface';
 import { addBooking, fetchCabin, fetchGuest } from '../repo/adminRepo';
 import validator from 'validator';
+import { refactorErrorMessage } from '../utils/error';
 import { validationResult } from 'express-validator';
 export const addGuest = (req: Request, resp: Response) => {
   try {
@@ -44,8 +45,10 @@ export const Booking = async (req: Request, resp: Response) => {
 
     const result = validationResult(req);
     if (!result.isEmpty()) {
+      const error = refactorErrorMessage(result);
       return resp.status(400).json({
-        error: result,
+        status: 'fail',
+        error,
       });
     }
 

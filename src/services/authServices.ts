@@ -1,8 +1,8 @@
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import { Response } from "express";
-
-import { IUserDB } from "../Interface/interface";
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import { Response } from 'express';
+import { promisify } from 'util';
+import { IUserDB } from '../Interface/interface';
 
 const signToken = (id: number): string => {
   //   return jwt.sign({ id }, process.env.JWT_SECRET , {
@@ -24,12 +24,12 @@ export const createSendToken = (
   };
   //   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
-  res.cookie("jwt", token, cookieOptions);
+  res.cookie('jwt', token, cookieOptions);
 
   // Remove password from output
 
   res.status(statusCode).json({
-    status: "success",
+    status: 'success',
     token,
     data: {
       emai: user.email,
@@ -48,4 +48,20 @@ export const correctPassword = async (
 export const hashPassword = async (password: string): Promise<string> => {
   const encrptedPassword = await bcrypt.hash(password, 10);
   return encrptedPassword;
+};
+
+export const decodeToken = async (token: string): Promise<any> => {
+  const secret = process.env.JWT_SECRET as string;
+  return await jwtVerifyPromisified(token, secret);
+};
+const jwtVerifyPromisified = (token: string, secret: string) => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, secret, {}, (err, payload) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(payload);
+      }
+    });
+  });
 };

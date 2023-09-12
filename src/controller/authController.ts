@@ -1,23 +1,26 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator/src/validation-result';
-import { ILogin, IUserDB, IUserSingUp, IBooking } from '../Interface/interface';
+import { ILogin, IUserSingUp } from '../Interface/interface';
+import { refactorErrorMessage } from '../utils/error';
+import { promisify } from 'util';
 import {
   createSendToken,
   correctPassword,
   hashPassword,
+  decodeToken,
 } from '../services/authServices';
-import { addUser, fetchUser } from '../repo/authRepo';
-import { mySqlConnection } from '..';
-import { Query } from '../utils/query';
-let query = new Query();
+import { addUser, fetchUser, fetchUserById } from '../repo/authRepo';
+
 //login
 export const login = async (req: Request, resp: Response) => {
   const user = <ILogin>req.body;
   try {
     const result = validationResult(req);
     if (!result.isEmpty()) {
+      const error = refactorErrorMessage(result);
       return resp.status(200).json({
-        error: result,
+        status: 'fail',
+        error,
       });
     }
     //find the user from the database
@@ -36,15 +39,17 @@ export const login = async (req: Request, resp: Response) => {
     });
   }
 };
-// email password confirmPassword.
+
 export const signup = async (req: Request, resp: Response) => {
   const user = <IUserSingUp>req.body;
   try {
     //some validation
     const result = validationResult(req);
     if (!result.isEmpty()) {
+      const error = refactorErrorMessage(result);
       return resp.status(400).json({
-        error: result.array(),
+        status: 'fail',
+        error,
       });
     }
 
@@ -61,6 +66,27 @@ export const signup = async (req: Request, resp: Response) => {
     resp.status(404).json({
       status: 'fail',
       message: message,
+    });
+  }
+};
+export const protect = async (
+  req: Request,
+  resp: Response,
+  next: NextFunction
+) => {
+  try {
+    if (!req.headers.authorization?.startsWith('Bearer'))
+      throw new Error('Token is invalid');
+    const token = req.headers.authorization.split(' ')[1];
+    if (token.length === 0) throw new Error('Token is invalid');
+    const decoded = await decodeToken(token);
+    const user = fetchUserById(decoded.id);
+    req.body.user = user;
+    next();
+  } catch (error) {
+    resp.status(400).json({
+      status: 'fail',
+      errror: 'Bearer token is invalid',
     });
   }
 };

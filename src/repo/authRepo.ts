@@ -15,6 +15,16 @@ export const fetchUser = async (user: ILogin): Promise<IUserDB | null> => {
   }
 };
 
+export const fetchUserById = async (id: number): Promise<IUserDB | null> => {
+  let q = query.SELECT(['*'], 'signup') + query.WHERE('id', id);
+  try {
+    const user = await fetchModel<IUserDB>(q);
+    return user;
+  } catch (error) {
+    return null;
+  }
+};
+
 export const addUser = async (newUser: ILogin, resp: Response) => {
   let query = `INSERT INTO signup(email,password) values('${newUser.email}','${newUser.password}')`;
   try {

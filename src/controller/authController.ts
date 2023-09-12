@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import validator from "validator";
-import { ILogin, IUserDB, IUserSingUp } from "../Interface/interface";
+import { ILogin, IUserDB, IUserSingUp, IBooking } from "../Interface/interface";
 import {
   createSendToken,
   correctPassword,

@@ -4,6 +4,7 @@ import mysql from "mysql";
 const app = express();
 
 import userRouter from "./routes/userRoutes";
+import adminRouter from "./routes/adminRoutes";
 import { error } from "console";
 import { stringify } from "querystring";
 
@@ -13,6 +14,7 @@ dotenv.config({
 
 app.use(express.json());
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/admin", adminRouter);
 
 export const mySqlConnection = mysql.createConnection({
   host: "localhost",

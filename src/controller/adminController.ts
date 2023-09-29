@@ -1,42 +1,67 @@
 import { Request, Response } from 'express';
 import { IGuest, ICabin, IBooking } from '../Interface/interface';
-import { addBooking, fetchCabin, fetchGuest } from '../repo/adminRepo';
-import validator from 'validator';
+import {
+  addBooking,
+  fetchCabin,
+  fetchGuest,
+  insertCabin,
+  insertGuest,
+} from '../repo/adminRepo';
 import { refactorErrorMessage } from '../utils/error';
 import { validationResult } from 'express-validator';
+import { formatDate } from '../utils/date';
+
+import validator from 'validator';
+import generateUniqueId from 'generate-unique-id';
+
 export const addGuest = (req: Request, resp: Response) => {
+  console.log('here');
   try {
     const guest = <IGuest>req.body;
-    if (
-      !guest.countryFlag ||
-      !guest.createdAt ||
-      !guest.email ||
-      !guest.fullName ||
-      !guest.id ||
-      !guest.natioanality ||
-      !guest.nationalId
-    )
-      throw new Error('please provide complete info');
-    console.log('ok');
-    if (validator.isEmail(guest.email))
-      throw new Error('please enter valid email');
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      const error = refactorErrorMessage(result);
+      return resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+
+    // random id
+    guest.id = +generateUniqueId({
+      useLetters: false,
+      useNumbers: true,
+      length: 10,
+    });
+    //YYYY-MM-DD
+    guest.createdAt = formatDate();
+    insertGuest(resp, guest);
   } catch (error) {}
 };
 
 export const addCabin = (req: Request, resp: Response) => {
-  const cabin = <ICabin>req.body;
   try {
-    if (
-      !cabin.createdAt ||
-      !cabin.description ||
-      !cabin.discount ||
-      !cabin.discount ||
-      !cabin.id ||
-      !cabin.maxCapacity ||
-      !cabin.name ||
-      !cabin.regularPrice
-    )
-      throw new Error('Please provide full and correct info');
+    const cabin = <ICabin>req.body;
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      const error = refactorErrorMessage(result);
+      return resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+    // random id
+    cabin.id = +generateUniqueId({
+      useLetters: false,
+      useNumbers: true,
+      length: 10,
+    });
+    //YYYY-MM-DD
+    cabin.createdAt = formatDate();
+
+    //image logic should go here cabin.cabinImage = ....
+
+    insertCabin(resp, cabin);
   } catch (error) {}
 };
 export const Booking = async (req: Request, resp: Response) => {

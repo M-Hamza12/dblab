@@ -4,8 +4,43 @@ import { addCabin, addGuest, Booking } from './../controller/adminController';
 import { protect } from '../controller/authController';
 const router = express.Router();
 
-router.route('/addCabin').post(addCabin);
-router.route('/addGuest').post(addGuest);
+router
+  .route('/addCabin')
+  .post(
+    body('name').notEmpty().withMessage('cabin must have a name'),
+    body('maxCapacity')
+      .notEmpty()
+      .withMessage('maxCapcity is required')
+      .isNumeric()
+      .withMessage('maxCapcity must be a numebr'),
+    body('discount')
+      .notEmpty()
+      .withMessage('discount is required')
+      .isNumeric()
+      .withMessage('discount must be a number'),
+    body('regularPrice')
+      .notEmpty()
+      .withMessage('regular Price is required')
+      .isNumeric()
+      .withMessage('regular price must be a number'),
+    body('description').notEmpty().withMessage('description is required'),
+    body('cabinImage').notEmpty().withMessage('cabin images is required'),
+    addCabin
+  );
+
+router
+  .route('/addGuest')
+  .post(
+    body('fullName').notEmpty().withMessage('fullName is required'),
+    body('email')
+      .notEmpty()
+      .withMessage('email is required')
+      .isEmail()
+      .withMessage('invalid email'),
+    body('nationalId').notEmpty().withMessage('nationalId is required'),
+    body('countryFlag').notEmpty().withMessage('country Flag is required'),
+    addGuest
+  );
 router.route('/booking').post(
   header('authorization').notEmpty().withMessage('invalid authorization'),
   protect,

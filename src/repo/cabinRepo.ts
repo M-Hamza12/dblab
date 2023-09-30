@@ -3,7 +3,7 @@ import { mySqlConnection } from '..';
 import { fetchModel } from '../repo/genericRepo';
 import { Response } from 'express';
 
-export class CabinService {
+export class CabinRepo {
   static addCabin(cabin: ICabin, res: Response) {
     const query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage)
                 VALUES(${cabin.id},'${cabin.createdAt}','${cabin.name}'
@@ -40,6 +40,17 @@ export class CabinService {
       );
     } catch (error) {
       throw error;
+    }
+  }
+
+  static async fetchCabin(cabinId: number): Promise<ICabin | null> {
+    try {
+      const cabin = await fetchModel<ICabin>(
+        'SELECT * FROM Cabin WHERE id=' + cabinId
+      );
+      return cabin;
+    } catch (error) {
+      return null;
     }
   }
 }

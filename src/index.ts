@@ -12,10 +12,10 @@ app.use(
 );
 
 import userRouter from './routes/userRoutes';
-import adminRouter from './routes/adminRoutes';
+// import adminRouter from './routes/adminRoutes';
 import cabinRouter from './routes/cabinRoutes';
-import { error } from 'console';
-import { stringify } from 'querystring';
+import guestRouter from './routes/guestRoutes';
+import bookingRouter from './routes/bookinRoutes';
 
 dotenv.config({
   path: './src/config.env',
@@ -23,8 +23,10 @@ dotenv.config({
 
 app.use(express.json());
 app.use('/api/v1/user', userRouter);
-app.use('/api/v1/admin', adminRouter);
+// app.use('/api/v1/admin', adminRouter);
 app.use('/api/v1/cabin', cabinRouter);
+app.use('/api/v1/guest', guestRouter);
+app.use('/api/v1/bookin', bookingRouter);
 
 export const mySqlConnection = mysql.createConnection({
   host: 'localhost',

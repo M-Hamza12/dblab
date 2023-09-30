@@ -1,45 +1,17 @@
 import express from 'express';
-const router = express.Router();
-import { body } from 'express-validator';
 
 import { getAllUser } from '../controller/userController';
-import { login, signup } from '../controller/authController';
+import { AuthController } from '../controller/authController';
+import { validateLogin } from '../validations/login.validation';
+import { validateSignup } from '../validations/signup.validation';
+
+const router = express.Router();
 
 router.route('/').get(getAllUser);
-router
-  .route('/login')
-  .post(
-    body('email')
-      .notEmpty()
-      .withMessage('email is required')
-      .isEmail()
-      .withMessage('invalid email'),
-    body('password')
-      .notEmpty()
-      .withMessage('password is required')
-      .isLength({ min: 8 })
-      .withMessage('password should be 8 character long'),
-    login
-  );
-router
-  .route('/signup')
-  .post(
-    body('email')
-      .notEmpty()
-      .withMessage('email is required')
-      .isEmail()
-      .withMessage('enter valid email'),
-    body('password')
-      .notEmpty()
-      .withMessage('password is required')
-      .isLength({ min: 8 })
-      .withMessage('password should be 8 characters long'),
-    body('confirmPassword')
-      .notEmpty()
-      .withMessage('confirmPassword is required')
-      .isLength({ min: 8 })
-      .withMessage('password should be 8 characters long'),
-    signup
-  );
+router.route('/login').post(validateLogin, AuthController.login);
+router.route('/signup').post(
+  validateSignup,
+  AuthController.signup //login
+);
 
 export default router;

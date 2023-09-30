@@ -32,5 +32,5 @@ export class CabinController {
   }
 
   static deleteCabin() {}
-  static updateCabin() {}
+  static updateCabin() {} //anas
 }

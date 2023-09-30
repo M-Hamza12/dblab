@@ -2,31 +2,10 @@ import express from 'express';
 import { body, header } from 'express-validator';
 import { addCabin, addGuest, Booking } from './../controller/adminController';
 import { protect } from '../controller/authController';
+import { validateCabin } from '../validations/addCabin.validation';
 const router = express.Router();
 
-router
-  .route('/addCabin')
-  .post(
-    body('name').notEmpty().withMessage('cabin must have a name'),
-    body('maxCapacity')
-      .notEmpty()
-      .withMessage('maxCapcity is required')
-      .isNumeric()
-      .withMessage('maxCapcity must be a numebr'),
-    body('discount')
-      .notEmpty()
-      .withMessage('discount is required')
-      .isNumeric()
-      .withMessage('discount must be a number'),
-    body('regularPrice')
-      .notEmpty()
-      .withMessage('regular Price is required')
-      .isNumeric()
-      .withMessage('regular price must be a number'),
-    body('description').notEmpty().withMessage('description is required'),
-    body('cabinImage').notEmpty().withMessage('cabin images is required'),
-    addCabin
-  );
+router.route('/addCabin').post(validateCabin, addCabin);
 
 router
   .route('/addGuest')

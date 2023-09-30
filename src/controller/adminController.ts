@@ -42,14 +42,6 @@ export const addGuest = (req: Request, resp: Response) => {
 export const addCabin = (req: Request, resp: Response) => {
   try {
     const cabin = <ICabin>req.body;
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      const error = refactorErrorMessage(result);
-      return resp.status(400).json({
-        status: 'fail',
-        error,
-      });
-    }
     // random id
     cabin.id = +generateUniqueId({
       useLetters: false,

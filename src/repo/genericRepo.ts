@@ -2,8 +2,9 @@ import { mySqlConnection } from '..';
 export function fetchModel<T>(query: string): Promise<T> {
   return new Promise((resolve, reject) => {
     mySqlConnection.query(query, (err, rows) => {
+      console.log('rows', rows);
       if (err) reject(err);
-      else resolve(rows[0]);
+      else resolve(rows);
     });
   });
 }

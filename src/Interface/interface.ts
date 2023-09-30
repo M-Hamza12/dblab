@@ -59,3 +59,7 @@ export interface IErrorField {
 export interface IError {
   [key: string]: string;
 }
+export interface CabinPaginatedResponse {
+  cabins: ICabin[];
+  count: number;
+}

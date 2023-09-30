@@ -10,8 +10,8 @@ import {
 import { refactorErrorMessage } from '../utils/error';
 import { validationResult } from 'express-validator';
 import { formatDate } from '../utils/date';
+import { parseFormData } from '../utils/parseFormData';
 
-import validator from 'validator';
 import generateUniqueId from 'generate-unique-id';
 
 export const addGuest = (req: Request, resp: Response) => {
@@ -41,6 +41,9 @@ export const addGuest = (req: Request, resp: Response) => {
 
 export const addCabin = (req: Request, resp: Response) => {
   try {
+    console.log(req.file?.filename);
+    req.body = parseFormData(req);
+    console.log(req.body);
     const cabin = <ICabin>req.body;
     const result = validationResult(req);
     if (!result.isEmpty()) {

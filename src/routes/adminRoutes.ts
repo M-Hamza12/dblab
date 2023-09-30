@@ -1,8 +1,13 @@
 import express from 'express';
+import multer from 'multer';
+
 import { body, header } from 'express-validator';
 import { addCabin, addGuest, Booking } from './../controller/adminController';
 import { protect } from '../controller/authController';
+
 const router = express.Router();
+
+const upload = multer({ dest: 'files/' });
 
 router
   .route('/addCabin')
@@ -25,6 +30,7 @@ router
       .withMessage('regular price must be a number'),
     body('description').notEmpty().withMessage('description is required'),
     body('cabinImage').notEmpty().withMessage('cabin images is required'),
+    upload.any(),
     addCabin
   );
 

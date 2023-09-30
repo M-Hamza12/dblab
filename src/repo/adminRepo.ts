@@ -4,36 +4,38 @@ import { mySqlConnection } from '..';
 import { fetchModel } from './genericRepo';
 //adding new geust to db
 export const insertGuest = (resp: Response, guest: IGuest) => {
-  mySqlConnection.query('INSERT INTO GUEST() VALUES()', (error, rows) => {
+  const query = `INSERT INTO GUESTS(id,createdAt,fullName,nationalId,countryFlag)
+                 VALUES(${guest.id},'${guest.createdAt}','${guest.fullName}','${guest.nationalId}','${guest.countryFlag}')`;
+
+  mySqlConnection.query(query, (error, rows) => {
     try {
       if (error) throw error;
       resp.status(201).json({
         status: 'success',
-        data: {
-          guest: rows[0],
-        },
       });
     } catch (error) {
       resp.status(404).json({
         status: 'fail',
+        error,
       });
     }
   });
 };
 //adding new Cabin to db
 export const insertCabin = (resp: Response, cabin: ICabin) => {
-  mySqlConnection.query('INSERT INTO Cabin() VALUES()', (error, rows) => {
+  let query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage)
+                VALUES(${cabin.id},'${cabin.createdAt}','${cabin.name}'
+                      ,${cabin.maxCapacity},${cabin.regularPrice},${cabin.discount},'${cabin.description}','${cabin.cabinImage}')`;
+  mySqlConnection.query(query, (error, rows) => {
     try {
       if (error) throw error;
       resp.status(201).json({
         status: 'success',
-        data: {
-          cabin: rows[0],
-        },
       });
     } catch (error) {
       resp.status(404).json({
         status: 'fail',
+        error,
       });
     }
   });

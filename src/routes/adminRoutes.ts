@@ -2,10 +2,24 @@ import express from 'express';
 import { body, header } from 'express-validator';
 import { addCabin, addGuest, Booking } from './../controller/adminController';
 import { protect } from '../controller/authController';
+import { validateCabin } from '../validations/addCabin.validation';
 const router = express.Router();
 
-router.route('/addCabin').post(addCabin);
-router.route('/addGuest').post(addGuest);
+router.route('/addCabin').post(validateCabin, addCabin);
+
+router
+  .route('/addGuest')
+  .post(
+    body('fullName').notEmpty().withMessage('fullName is required'),
+    body('email')
+      .notEmpty()
+      .withMessage('email is required')
+      .isEmail()
+      .withMessage('invalid email'),
+    body('nationalId').notEmpty().withMessage('nationalId is required'),
+    body('countryFlag').notEmpty().withMessage('country Flag is required'),
+    addGuest
+  );
 router.route('/booking').post(
   header('authorization').notEmpty().withMessage('invalid authorization'),
   protect,

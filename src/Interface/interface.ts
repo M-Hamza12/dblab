@@ -1,3 +1,5 @@
+import { File } from 'buffer';
+
 export interface ILogin {
   email: string;
   password: string;
@@ -15,7 +17,7 @@ export interface IUserSingUp {
 }
 export interface IGuest {
   id: number;
-  createdAt: Date;
+  createdAt: string;
   fullName: string;
   email: string;
   nationalId: string;
@@ -42,12 +44,13 @@ export interface IBooking {
 
 export interface ICabin {
   id: number;
-  createdAt: Date;
+  createdAt: string;
   name: string;
   maxCapacity: number;
   regularPrice: number;
   discount: number;
   description: string;
+  cabinImage: File;
 }
 export interface IErrorField {
   field?: string;
@@ -55,4 +58,8 @@ export interface IErrorField {
 }
 export interface IError {
   [key: string]: string;
+}
+export interface CabinPaginatedResponse {
+  cabins: ICabin[];
+  count: number;
 }

@@ -6,7 +6,6 @@ import generateUniqueId from 'generate-unique-id';
 
 export class GuestController {
   static addGuest(req: Request, resp: Response) {
-    console.log('here');
     try {
       const guest = req.body as IGuest;
       // random id

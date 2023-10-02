@@ -52,6 +52,16 @@ export interface ICabin {
   description: string;
   cabinImage: File;
 }
+export interface IUpdateCabin {
+  id?: number;
+  createdAt?: string;
+  name: string;
+  maxCapacity: number;
+  regularPrice: number;
+  discount: number;
+  description: string;
+  cabinImage: File;
+}
 export interface IErrorField {
   field?: string;
   message: string;
@@ -62,4 +72,11 @@ export interface IError {
 export interface CabinPaginatedResponse {
   cabins: ICabin[];
   count: number;
+}
+
+export interface IParamQuery {
+  sort?: string;
+  pageSize?: string;
+  pageNumber?: string;
+  sortBy?: 'asc' | 'desc';
 }

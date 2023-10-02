@@ -58,10 +58,7 @@ class S3Service {
           const signedUrl = await getSignedUrl(this.s3, command, {
             expiresIn: 3600,
           });
-          console.log(key);
-          const keyUrl: { [key: string]: string } = {};
-          keyUrl[`${key}`] = signedUrl;
-          return keyUrl;
+          return { [key as string]: signedUrl };
         })
       );
       return { urls };

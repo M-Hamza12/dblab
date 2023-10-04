@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mysql from 'mysql';
 import cors from 'cors';
+import { logger } from '../logger';
 
 const app = express();
 app.use(
@@ -37,12 +38,12 @@ export const mySqlConnection = mysql.createConnection({
 
 mySqlConnection.connect((error) => {
   if (error) {
-    console.log('error connecting to db ' + JSON.stringify(error));
+    logger.error('error connecting to db ' + JSON.stringify(error));
   } else {
     console.log('connected to db successfully');
   }
 });
 
 app.listen(3000, () => {
-  console.log(process.env.name + ' server is listening on port 3000');
+  logger.info(process.env.name + ' server is listening on port 3000');
 });

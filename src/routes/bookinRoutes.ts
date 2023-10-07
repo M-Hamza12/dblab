@@ -5,6 +5,6 @@ import { BookingController } from '../controller/bookingController';
 
 const router = express.Router();
 
-router.route('/booking').post(validateBooking, BookingController.Booking);
+router.route('/booking').post(validateBooking, BookingController.addBooking);
 
 export default router;

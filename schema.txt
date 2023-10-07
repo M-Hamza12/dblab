@@ -15,6 +15,11 @@ insert into cabins values(22,'2002-09-11','adcala',23,104300,1001,'abca','abc');
 insert into cabins values(33,'2001-09-11','algdsga',23,211000,1020,'abca','abc');
 insert into cabins values(44,'2006-09-11','algsdgsa',12,211000,200,'abca','abc');
 
+--updation
+update cabins
+set name = 'hamsterdam' , maxCapacity = 5
+where id = 1;
+
 =========================================================
 
 CREATE TABLE GUESTS(

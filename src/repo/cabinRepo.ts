@@ -1,7 +1,8 @@
-import { ICabin } from '../Interface/interface';
+import { ICabin, IParamQuery } from '../Interface/interface';
 import { mySqlConnection } from '..';
-import { fetchModel } from '../repo/genericRepo';
+import { fetchModel, updateModel, deleteModel } from '../repo/genericRepo';
 import { Response } from 'express';
+import { Query } from '../utils/query';
 
 export class CabinRepo {
   static addCabin(cabin: ICabin, res: Response) {
@@ -22,9 +23,11 @@ export class CabinRepo {
       }
     });
   }
-  static async findAllCabins(): Promise<ICabin[] | null> {
+  static async findAllCabins(param: IParamQuery): Promise<ICabin[] | null> {
     try {
-      const cabins = (await fetchModel('SELECT * FROM Cabins')) as ICabin[];
+      const cabins = (await fetchModel(
+        'SELECT * FROM Cabins' + Query.paramQuery(param)
+      )) as ICabin[];
       return cabins?.map(
         (cabin) =>
           ({
@@ -51,6 +54,23 @@ export class CabinRepo {
       return cabin;
     } catch (error) {
       return null;
+    }
+  }
+  static async updateCabin(cabinId: number, data: any, resp: Response) {
+    try {
+      const query = Query.updateById(cabinId, 'cabins', data);
+
+      await updateModel(query);
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async deleteCabin(cabinId: number, resp: Response) {
+    try {
+      let query = Query.deleteById(cabinId, 'CABINS');
+      await deleteModel(query);
+    } catch (error) {
+      throw error;
     }
   }
 }

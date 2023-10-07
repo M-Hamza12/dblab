@@ -7,7 +7,7 @@ import {
 import generateUniqueId from 'generate-unique-id';
 import { formatDate } from '../utils/date';
 import { CabinRepo } from '../repo/cabinRepo';
-
+import S3Service from './../services/S3Service';
 export class CabinController {
   static addCabin(req: Request, resp: Response) {
     try {
@@ -22,15 +22,21 @@ export class CabinController {
       //YYYY-MM-DD
       cabin.createdAt = formatDate();
 
-      //image logic should go here cabin.cabinImage = ....
       CabinRepo.addCabin(cabin, resp);
     } catch (error) {}
   }
   static async findAllCabins(req: Request, res: Response) {
     const cabins = await CabinRepo.findAllCabins(req.query as IParamQuery);
+    const { urls, error } = await S3Service.getPresignedUrls();
+    console.log(error);
     return res.status(200).json({
       count: cabins?.length,
-      cabins,
+      cabins: cabins?.map((cabin) => ({
+        ...cabin,
+        image: urls?.find((url) => url[cabin.cabinImage as string])?.[
+          cabin.cabinImage as string
+        ],
+      })),
     } as CabinPaginatedResponse);
   }
 

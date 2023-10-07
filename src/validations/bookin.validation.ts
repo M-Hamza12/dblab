@@ -36,7 +36,6 @@ export const validateBooking = [
   body('guestId').isNumeric().withMessage('enter numeric value'),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
-    console.log('body ', req.body);
     if (!errors.isEmpty()) {
       const error = refactorErrorMessage(errors);
       return res.status(400).json({ errors: error });

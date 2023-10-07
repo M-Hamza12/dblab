@@ -50,7 +50,7 @@ export interface ICabin {
   regularPrice: number;
   discount: number;
   description: string;
-  cabinImage: File;
+  cabinImage: string;
 }
 export interface IUpdateCabin {
   id?: number;

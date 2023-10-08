@@ -108,10 +108,11 @@ export class BookingController {
       //If you are altering the date or maybe booking other cabin than hv to check dates
       if (data.startDate && data.endDate && data.cabinId) {
         if (
-          !(await BookingService.isValidDate(
+          !(await BookingService.isValidUpdateDate(
             data.startDate,
             data.endDate,
-            data.cabinId
+            data.cabinId,
+            id
           ))
         )
           throw new Error('Confilicting dates for the given cabin and date');

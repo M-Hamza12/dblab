@@ -3,12 +3,21 @@ import { IBooking } from '../Interface/interface';
 import { Response } from 'express';
 import { CabinRepo } from './cabinRepo';
 import { GuestRepo } from './guestRepo';
+import { formatDate } from '../utils/date';
 import { IParamQuery } from '../Interface/interface';
-import { fetchModel, deleteModel } from './genericRepo';
+import { fetchModel, deleteModel, updateModel } from './genericRepo';
 import { Query } from '../utils/query';
 export class BookingRepo {
   static addBooking(booking: IBooking, resp: Response) {
-    mySqlConnection.query('INSERT INTO BOOKING() VALUES()', (error, rows) => {
+    console.log(booking);
+    let query = `INSERT INTO BOOKINGS VALUES(${booking.id},'${formatDate()}','${
+      booking.startDate
+    }','${booking.endDate}',${booking.numNights},${booking.numGuests},${
+      booking.cabinPrice
+    },${booking.extrasPrice},${booking.totalPrice},'${booking.status}','${
+      booking.observation ? booking.observation : ''
+    }',${booking.cabinId},${booking.guestId},${booking.hasBreakFast})`;
+    mySqlConnection.query(query, (error, rows) => {
       try {
         if (error) throw error;
         resp.status(201).json({
@@ -17,15 +26,18 @@ export class BookingRepo {
       } catch (error) {
         resp.status(404).json({
           status: 'fail',
+          error,
         });
       }
     });
   }
   static async fetchGuest(guestId: number) {
-    return await GuestRepo.fetchGuest(guestId);
+    const guest = await GuestRepo.fetchGuest(guestId);
+    return guest ? guest[0] : null;
   }
   static async fetchCabin(cabinId: number) {
-    return await CabinRepo.fetchCabin(cabinId);
+    const cabin = await CabinRepo.fetchCabin(cabinId);
+    return cabin ? cabin[0] : null;
   }
   static async getAllBookings(param: IParamQuery): Promise<IBooking[] | null> {
     try {
@@ -39,8 +51,21 @@ export class BookingRepo {
   }
   static async getBookingById(bookingId: number): Promise<IBooking | null> {
     try {
-      const booking = await fetchModel<IBooking>(
+      const booking = await fetchModel<IBooking[]>(
         'SELECT * FROM BOOKINGS WHERE ID = ' + bookingId
+      );
+      if (!booking) throw new Error('No such booking');
+      return booking[0];
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async getBookingByCabinId(
+    cabinId: number
+  ): Promise<IBooking[] | null> {
+    try {
+      const booking = await fetchModel<IBooking[]>(
+        'SELECT * FROM BOOKINGS WHERE cabinId = ' + cabinId
       );
       if (!booking) throw new Error('No such booking');
       return booking;
@@ -48,9 +73,19 @@ export class BookingRepo {
       throw error;
     }
   }
+  static async updateBooking(bookingId: number, data: any) {
+    try {
+      const query = Query.updateById(bookingId, 'bookings', data);
+
+      await updateModel(query);
+    } catch (error) {
+      throw error;
+    }
+  }
   static async deleteBooking(bookingId: number): Promise<string> {
     try {
-      return await deleteModel('Delete from Bookings where id = ' + bookingId);
+      let query = Query.deleteById(bookingId, 'CABINS');
+      return await deleteModel(query);
     } catch (error) {
       throw error;
     }

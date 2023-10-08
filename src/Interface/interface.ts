@@ -41,6 +41,22 @@ export interface IBooking {
   cabinId: number;
   guestId: number;
 }
+export interface IUpdateBooking {
+  createdAt?: Date;
+  startDate?: Date;
+  endDate?: Date;
+  numNights?: number;
+  numGuests?: number;
+  cabinPrice?: number;
+  extrasPrice?: number;
+  totalPrice?: number;
+  status?: string;
+  hasBreakFast?: boolean;
+  isPaid?: boolean;
+  observation?: boolean;
+  cabinId?: number;
+  guestId?: number;
+}
 
 export interface ICabin {
   id: number;

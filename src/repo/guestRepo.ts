@@ -23,10 +23,10 @@ export class GuestRepo {
     });
   }
 
-  static async fetchGuest(guestId: number): Promise<IGuest | null> {
+  static async fetchGuest(guestId: number): Promise<IGuest[] | null> {
     try {
-      const guest = await fetchModel<IGuest>(
-        'SELECT * FROM GUEST WHERE id=' + guestId
+      const guest = await fetchModel<IGuest[]>(
+        'SELECT * FROM GUESTS WHERE id=' + guestId
       );
       return guest;
     } catch (error) {

@@ -37,7 +37,7 @@ insert into guests(id,createdAt,fullName,nationalId,countryFlag) values(122,'200
 
 ===================================== Booking =========================
 CREATE TABLE bookings (
-    id int,
+    id bigint,
     created_at date  NOT NULL,
     startDate date NOT NULL,
     endDate date NOT NULL,

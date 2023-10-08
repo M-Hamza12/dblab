@@ -41,7 +41,7 @@ export class AuthController {
     } catch (error) {
       resp.status(400).json({
         status: 'fail',
-        errror: 'Bearer token is invalid',
+        errror: 'You are not authorized',
       });
     }
   }

@@ -26,7 +26,7 @@ app.use('/api/v1/user', userRouter);
 // app.use('/api/v1/admin', adminRouter);
 app.use('/api/v1/cabin', cabinRouter);
 app.use('/api/v1/guest', guestRouter);
-app.use('/api/v1/bookin', bookingRouter);
+app.use('/api/v1/booking', bookingRouter);
 
 export const mySqlConnection = mysql.createConnection({
   host: 'localhost',

@@ -90,4 +90,16 @@ export class BookingRepo {
       throw error;
     }
   }
+  static async getBookingOfPastDays(days: number): Promise<IBooking[]> {
+    try {
+      let date = formatDate(new Date(Date.now() - days * 24 * 60 * 60 * 1000));
+
+      let query = `SELECT * FROM BOOKINGS WHERE startDate >= "${date}"`;
+
+      const bookings = await fetchModel<IBooking[]>(query);
+      return bookings;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { IGuest } from '../Interface/interface';
+import { IGuest, IUpdateGuest } from '../Interface/interface';
 import { Request, Response } from 'express';
 import { formatDate } from '../utils/date';
 import { GuestRepo } from '../repo/guestRepo';
@@ -64,7 +64,7 @@ export class GuestController {
   static async updateGuest(req: Request, resp: Response) {
     try {
       const id = +req.params.id;
-      const message = await GuestRepo.updateGuest(id, req.body);
+      const message = await GuestRepo.updateGuest(id, req.body as IUpdateGuest);
       resp.status(203).json({
         status: 'success',
         message,

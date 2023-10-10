@@ -1,6 +1,6 @@
 import { mySqlConnection } from '..';
 import { Query } from '../utils/query';
-import { IGuest } from '../Interface/interface';
+import { IGuest, IUpdateGuest } from '../Interface/interface';
 import { Response } from 'express';
 import { deleteModel, fetchModel, updateModel, addModel } from './genericRepo';
 
@@ -32,7 +32,10 @@ export class GuestRepo {
       throw error;
     }
   }
-  static async updateGuest(guestId: number, data: any): Promise<string> {
+  static async updateGuest(
+    guestId: number,
+    data: IUpdateGuest
+  ): Promise<string> {
     try {
       const query = Query.updateById(guestId, 'Guests', data);
       return await updateModel(query);

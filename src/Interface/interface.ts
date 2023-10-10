@@ -24,6 +24,14 @@ export interface IGuest {
   natioanality: string;
   countryFlag: string;
 }
+export interface IUpdateGuest {
+  createdAt?: string;
+  fullName?: string;
+  email?: string;
+  nationalId?: string;
+  natioanality?: string;
+  countryFlag?: string;
+}
 export interface IBooking {
   id: number;
   createdAt: Date;

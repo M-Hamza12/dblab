@@ -46,12 +46,12 @@ export class CabinRepo {
     }
   }
 
-  static async fetchCabin(cabinId: number): Promise<ICabin[] | null> {
+  static async fetchCabin(cabinId: number): Promise<ICabin | null> {
     try {
       const cabin = await fetchModel<ICabin[]>(
         'SELECT * FROM Cabins WHERE id=' + cabinId
       );
-      return cabin;
+      return cabin[0];
     } catch (error) {
       return null;
     }

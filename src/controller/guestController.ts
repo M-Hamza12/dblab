@@ -5,7 +5,7 @@ import { GuestRepo } from '../repo/guestRepo';
 import generateUniqueId from 'generate-unique-id';
 
 export class GuestController {
-  static addGuest(req: Request, resp: Response) {
+  static async addGuest(req: Request, resp: Response) {
     console.log('here');
     try {
       const guest = req.body as IGuest;
@@ -17,7 +17,78 @@ export class GuestController {
       });
       //YYYY-MM-DD
       guest.createdAt = formatDate();
-      GuestRepo.addGuest(resp, guest);
-    } catch (error) {}
+
+      let message = await GuestRepo.addGuest(guest);
+
+      resp.status(201).json({
+        status: 'success',
+        message,
+      });
+    } catch (error) {
+      resp.status(404).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
+  static async getAllGuests(req: Request, resp: Response) {
+    try {
+      const guests = await GuestRepo.getAllGuest();
+      resp.status(200).json({
+        status: 'success',
+        result: guests.length,
+        guests,
+      });
+    } catch (error) {
+      resp.status(404).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
+  static async getGuestById(req: Request, resp: Response) {
+    try {
+      const id = +req.params.id;
+      const guest = await GuestRepo.fetchGuest(id);
+      resp.status(200).json({
+        status: 'success',
+        guest,
+      });
+    } catch (error) {
+      resp.status(404).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
+  static async updateGuest(req: Request, resp: Response) {
+    try {
+      const id = +req.params.id;
+      const message = await GuestRepo.updateGuest(id, req.body);
+      resp.status(203).json({
+        status: 'success',
+        message,
+      });
+    } catch (error) {
+      resp.status(404).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
+  static async deleteGuest(req: Request, resp: Response) {
+    try {
+      const id = +req.params.id;
+      const message = await GuestRepo.deleteGuest(id);
+      resp.status(204).json({
+        status: 'success',
+        message,
+      });
+    } catch (error) {
+      resp.status(404).json({
+        status: 'fail',
+        error,
+      });
+    }
   }
 }

@@ -32,12 +32,20 @@ export class BookingRepo {
     });
   }
   static async fetchGuest(guestId: number) {
-    const guest = await GuestRepo.fetchGuest(guestId);
-    return guest ? guest[0] : null;
+    try {
+      const guest = await GuestRepo.fetchGuest(guestId);
+      return guest;
+    } catch (error) {
+      throw error;
+    }
   }
   static async fetchCabin(cabinId: number) {
-    const cabin = await CabinRepo.fetchCabin(cabinId);
-    return cabin ? cabin[0] : null;
+    try {
+      const cabin = await CabinRepo.fetchCabin(cabinId);
+      return cabin;
+    } catch (error) {
+      throw error;
+    }
   }
   static async getAllBookings(param: IParamQuery): Promise<IBooking[] | null> {
     try {

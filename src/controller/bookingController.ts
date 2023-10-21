@@ -156,4 +156,20 @@ export class BookingController {
       });
     }
   }
+  static async getTodayActivity(req: Request, resp: Response) {
+    try {
+      console.log('hit activity');
+      const bookings = await BookingRepo.getTodayActivity();
+      resp.status(200).json({
+        status: 'succes',
+        result: bookings.length,
+        bookings,
+      });
+    } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
 }

@@ -8,6 +8,8 @@ const router = express.Router();
 router.route('/').get(BookingController.getAllBookings);
 router.route('/').post(validateBooking, BookingController.addBooking);
 
+router.route('/todayactivity').get(BookingController.getTodayActivity);
+
 router.route('/:id').get(BookingController.getBookingById);
 router.route('/:id').patch(BookingController.updateBooking);
 

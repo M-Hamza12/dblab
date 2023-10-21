@@ -58,3 +58,31 @@ CREATE TABLE bookings (
 
 Insert into bookings values(1,'2012-03-01','2012-05-05','2012-05-08',3,3,1000,100,1000,'okay','observed',3141412466,122,false);
 Insert into bookings values(22,'2012-03-01','2012-05-05','2012-05-08',3,3,1000,100,1000,'okay','observed',3141412466,12,true);
+
+
+
+
+CREATE TABLE bookings (
+    id bigint,
+    created_at date  NOT NULL,
+    startDate date NOT NULL,
+    endDate date NOT NULL,
+    numNights int,
+    numGuests int,
+    cabinPrice real,
+    extrasPrice real,
+    totalPrice real,
+    status varchar(1000), 
+    observations varchar(1000),
+    cabinId bigint,
+    guestId bigint,
+    hasBreakfast boolean,
+    checkInDate date default NULL,
+    checkOutDate date default NULL,
+    CONSTRAINT bookings_pkey PRIMARY KEY (id),
+    CONSTRAINT bookings_cabinId_fkey foreign key(cabinId) references cabins(Id),
+    CONSTRAINT bookings_guestId_fkey foreign key(guestId) references guests(Id)
+);
+
+Insert into bookings values(1,'2012-03-01','2012-05-05','2012-05-08',3,3,1000,100,1000,'okay','observed',3141412466,122,false,NULL,NULL);
+;

@@ -16,7 +16,9 @@ export class BookingRepo {
       booking.cabinPrice
     },${booking.extrasPrice},${booking.totalPrice},'${booking.status}','${
       booking.observation ? booking.observation : ''
-    }',${booking.cabinId},${booking.guestId},${booking.hasBreakFast})`;
+    }',${booking.cabinId},${booking.guestId},${
+      booking.hasBreakFast
+    },NULL,NULL)`;
     mySqlConnection.query(query, (error, rows) => {
       try {
         if (error) throw error;
@@ -104,6 +106,17 @@ export class BookingRepo {
 
       let query = `SELECT * FROM BOOKINGS WHERE startDate >= "${date}"`;
 
+      const bookings = await fetchModel<IBooking[]>(query);
+      return bookings;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async getTodayActivity() {
+    try {
+      let date = formatDate(new Date(Date.now()));
+      let query = `SELECT * FROM BOOKINGS WHERE (status = 'checkIn' and checkInDate = '${date}') OR (status = 'checkOut' and checkOutDate = '${date}')`;
+      console.log(date);
       const bookings = await fetchModel<IBooking[]>(query);
       return bookings;
     } catch (error) {

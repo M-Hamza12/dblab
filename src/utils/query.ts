@@ -33,10 +33,10 @@ export class Query {
   static paramQuery(queryString: IParamQuery): string {
     console.log(queryString);
     let query = ' ';
-    if (queryString.sort) {
-      query += `order by ${
-        queryString.sortBy ? queryString.sortBy + ' ' : 'desc '
-      }`;
+    if (queryString.sortBy) {
+      query += `order by ${queryString.sortBy.split('-')[0]} ${
+        queryString.sortBy.split('-')[1]
+      } `;
     }
     const pageNo = queryString.pageNumber ? +queryString.pageNumber : 1;
     const limit = queryString.pageSize ? +queryString.pageSize : 10;

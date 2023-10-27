@@ -34,3 +34,65 @@ CREATE TABLE GUESTS(
 
 insert into guests(id,createdAt,fullName,nationalId,countryFlag) values(12,'2004-12-12','hamza malik','12121212','pakistan');
 insert into guests(id,createdAt,fullName,nationalId,countryFlag) values(122,'2004-12-12','talha malik','12121212','pakistan');
+
+================== items ====================
+
+create table items(
+	itemId int,
+    price int,
+    picture varchar(100),
+    name varchar(100),
+    constraint table_PK primary key(itemId)
+);
+insert into items values(1,100,'eggs.png','egg');
+insert into items values(2,30,'bread.png','bread');
+insert into items values(3,60,'tea.png','tea');
+
+=========================== deal =====================
+-- remember dealID not dealId.
+create table deals(
+	dealID int,
+    itemId int,
+    constraint deals_PK primary key(dealId,itemId),
+    constraint deals_FK foreign key(itemId) REFERENCES items(itemId)
+);
+--deal 1
+insert into deals values(1,1);
+insert into deals values(1,2);
+insert into deals values(1,3);
+
+--deal 2
+insert into deals values(2,3);
+===================================== Booking =========================
+
+
+CREATE TABLE bookings (
+    id bigint,
+    created_at date  NOT NULL,
+    startDate date NOT NULL,
+    endDate date NOT NULL,
+    numNights int,
+    numGuests int,
+    cabinPrice real,
+    extrasPrice real,
+    totalPrice real,
+    status varchar(1000), 
+    observations varchar(1000),
+    cabinId bigint,
+    guestId bigint,
+    hasBreakfast boolean,
+    checkInDate date default NULL,
+    checkOutDate date default NULL,
+    dealId int,
+    hasSmoking boolean,
+    CONSTRAINT bookings_pkey PRIMARY KEY (id),
+    CONSTRAINT bookings_cabinId_fkey foreign key(cabinId) references cabins(Id),
+    CONSTRAINT bookings_guestId_fkey foreign key(guestId) references guests(Id),
+    CONSTRAINT bookkings_dealId_fkey foreign key(dealId) REFERENCES deals(dealId)
+);
+ALTER TABLE Bookings ADD CONSTRAINT CHK_PersonAge CHECK(hasBreakfast=true AND dealId is not NULL);
+
+
+Insert into bookings values(2,'2012-03-01','2012-05-05','2012-05-08',3,3,1000,100,1000,'okay','observed',3141412466,122,true,NULL,NULL,1,true);
+;
+

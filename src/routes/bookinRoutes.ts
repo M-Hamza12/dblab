@@ -5,6 +5,14 @@ import { BookingController } from '../controller/bookingController';
 
 const router = express.Router();
 
-router.route('/booking').post(validateBooking, BookingController.Booking);
+router.route('/').get(BookingController.getAllBookings);
+router.route('/').post(validateBooking, BookingController.addBooking);
+
+router.route('/todayactivity').get(BookingController.getTodayActivity);
+
+router.route('/:id').get(BookingController.getBookingById);
+router.route('/:id').patch(BookingController.updateBooking);
+
+router.route('/pastbookings/:days').get(BookingController.pastDaysBooking);
 
 export default router;

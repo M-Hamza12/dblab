@@ -48,6 +48,8 @@ export interface IBooking {
   observation: boolean;
   cabinId: number;
   guestId: number;
+  hasSmoking: boolean;
+  dealId: number;
 }
 export interface IUpdateBooking {
   createdAt?: Date;
@@ -103,4 +105,14 @@ export interface IParamQuery {
   pageSize?: string;
   pageNumber?: string;
   sortBy?: 'asc' | 'desc';
+}
+export interface Iitem {
+  price: number;
+  picture: string;
+  name: string;
+  id: number;
+}
+export interface Ideal {
+  dealId: number;
+  itemId: number;
 }

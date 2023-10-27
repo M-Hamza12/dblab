@@ -25,11 +25,28 @@ export const validateBooking = [
   // body('extrasPrice').isNumeric().withMessage('enter numeric value'),
   // body('totalPrice').isNumeric().withMessage('enter numeric value'),
   body('status').notEmpty(),
-  body('hasBreakFast').isBoolean().withMessage('enter boolean value'),
-  body('isPaid').isBoolean().withMessage('enter boolean value'),
+  body('hasBreakFast')
+    .notEmpty()
+    .withMessage('hasBreakfast is required')
+    .isBoolean()
+    .withMessage('hasBreakfast is  boolean value'),
+  body('isPaid').isBoolean().withMessage('isPaid is boolean value'),
   // body('observation').isBoolean().withMessage('enter boolean value'),
-  body('cabinId').isNumeric().withMessage('enter numeric value'),
-  body('guestId').isNumeric().withMessage('enter numeric value'),
+  body('cabinId')
+    .notEmpty()
+    .withMessage('cabinId is required')
+    .isNumeric()
+    .withMessage('cabinId is numeric value'),
+  body('guestId')
+    .notEmpty()
+    .withMessage('guestId is required')
+    .isNumeric()
+    .withMessage('guestId numeric value'),
+  body('hasSmoking')
+    .notEmpty()
+    .withMessage('hasSmoking is required')
+    .isBoolean()
+    .withMessage('hasSmoking is boolean value'),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     console.log('body ', req.body);

@@ -16,6 +16,7 @@ import userRouter from './routes/userRoutes';
 import cabinRouter from './routes/cabinRoutes';
 import guestRouter from './routes/guestRoutes';
 import bookingRouter from './routes/bookinRoutes';
+import dealRouter from './routes/dealRoute';
 
 dotenv.config({
   path: './src/config.env',
@@ -27,6 +28,7 @@ app.use('/api/v1/user', userRouter);
 app.use('/api/v1/cabin', cabinRouter);
 app.use('/api/v1/guest', guestRouter);
 app.use('/api/v1/booking', bookingRouter);
+app.use('/api/v1/deals', dealRouter);
 
 export const mySqlConnection = mysql.createConnection({
   host: 'localhost',

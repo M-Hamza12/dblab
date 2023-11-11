@@ -41,7 +41,10 @@ export class itemController {
     try {
       const id = +req.params.id;
       await itemRepo.deleteItem(id);
-      resp.status(204);
+      console.log('here');
+      resp.status(204).json({
+        status: 'success',
+      });
     } catch (error) {
       resp.status(403).json({
         status: 'fail',

@@ -7,6 +7,8 @@ CREATE TABLE CABINS(
     discout real,
     description varchar(1000),
     cabinImage varchar(1000),
+    location varchar(1000),
+    floor int,
     constraint cabins_pkey primary key(id)
 );
 -- some data

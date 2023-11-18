@@ -23,7 +23,7 @@ export const validateSignup = [
     console.log('body ', req.body);
     if (!errors.isEmpty()) {
       const error = refactorErrorMessage(errors);
-      return res.status(400).json({ errors: error });
+      return res.status(400).json({ status: 'fail', errors: error });
     }
     next();
   },

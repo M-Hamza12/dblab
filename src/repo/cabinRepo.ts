@@ -6,9 +6,9 @@ import { Query } from '../utils/query';
 
 export class CabinRepo {
   static addCabin(cabin: ICabin, res: Response) {
-    const query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage)
+    const query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage,location,floor)
                 VALUES(${cabin.id},'${cabin.createdAt}','${cabin.name}'
-                      ,${cabin.maxCapacity},${cabin.regularPrice},${cabin.discount},'${cabin.description}','${cabin.cabinImage}')`;
+                      ,${cabin.maxCapacity},${cabin.regularPrice},${cabin.discount},'${cabin.description}','${cabin.cabinImage}','${cabin.location}','${cabin.floor}')`;
     mySqlConnection.query(query, (error, rows) => {
       try {
         if (error) throw error;
@@ -32,20 +32,24 @@ export class CabinRepo {
         (cabin) =>
           ({
             id: cabin.id,
-            createdAt: cabin.createdAt,
             name: cabin.name,
             maxCapacity: cabin.maxCapacity,
             regularPrice: cabin.regularPrice,
             discount: cabin.discount,
             description: cabin.description,
             cabinImage: cabin.cabinImage,
+            location: cabin.location,
+            floor: cabin.floor,
           } as ICabin)
       );
     } catch (error) {
       throw error;
     }
   }
-
+  static async getCabinsCount(): Promise<number> {
+    const cabins = await fetchModel<ICabin[]>('SELECT * FROM CABINS');
+    return cabins.length;
+  }
   static async fetchCabin(cabinId: number): Promise<ICabin | null> {
     try {
       const cabin = await fetchModel<ICabin[]>(

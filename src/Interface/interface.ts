@@ -76,6 +76,8 @@ export interface ICabin {
   regularPrice: number;
   discount: number;
   description: string;
+  floor: number;
+  location: string;
   cabinImage: File;
 }
 export interface IUpdateCabin {

@@ -13,7 +13,6 @@ export const validateAddGuest = [
   body('countryFlag').notEmpty().withMessage('country Flag is required'),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
-    console.log('body ', req.body);
     if (!errors.isEmpty()) {
       const error = refactorErrorMessage(errors);
       return res.status(400).json({ errors: error });

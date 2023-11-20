@@ -13,7 +13,12 @@ export class Query {
   WHERE(column: string, value: string | number): string {
     return ` WHERE ${column}="${value}"`;
   }
-  static updateById(id: number, table: string, data: any): string {
+  static updateById(
+    id: number,
+    table: string,
+    data: any,
+    idField: string = ''
+  ): string {
     const keys = Object.keys(data);
     //making the dyanimc query
     let query = `UPDATE ${table} SET `;
@@ -24,7 +29,7 @@ export class Query {
 
       query += `${k}=${data[k]}`;
     });
-    query += ` WHERE id = ${id}`;
+    query += ` WHERE ${idField === '' ? 'id' : idField} = ${id}`;
     return query;
   }
   static deleteById(id: number, table: string) {

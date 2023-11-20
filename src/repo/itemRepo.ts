@@ -23,14 +23,14 @@ export class itemRepo {
   }
   static async updateItem(itemId: number, data: any) {
     try {
-      await updateModel(Query.updateById(itemId, 'items', data));
+      await updateModel(Query.updateById(itemId, 'items', data, 'itemId'));
     } catch (error) {
       throw error;
     }
   }
   static async deleteItem(itemId: number) {
     try {
-      await deleteModel(Query.deleteById(itemId, 'items'));
+      await deleteModel('Delete from items where itemId = ' + itemId);
     } catch (error) {
       throw error;
     }

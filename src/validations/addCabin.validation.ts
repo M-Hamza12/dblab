@@ -23,7 +23,6 @@ export const validateCabin = [
   body('cabinImage').notEmpty().withMessage('Cabin images are required'),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
-    console.log('body ', req.body);
     if (!errors.isEmpty()) {
       const error = refactorErrorMessage(errors);
       return res.status(400).json({ errors: error });

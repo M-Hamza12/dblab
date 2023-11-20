@@ -20,7 +20,6 @@ export const validateSignup = [
     .withMessage('password should be 8 characters long'),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
-    console.log('body ', req.body);
     if (!errors.isEmpty()) {
       const error = refactorErrorMessage(errors);
       return res.status(400).json({ status: 'fail', errors: error });

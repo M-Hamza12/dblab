@@ -7,7 +7,7 @@ import {
 import generateUniqueId from 'generate-unique-id';
 import { formatDate } from '../utils/date';
 import { CabinRepo } from '../repo/cabinRepo';
-
+import S3Service from './../services/S3Service';
 export class CabinController {
   static addCabin(req: Request, resp: Response) {
     try {
@@ -22,7 +22,6 @@ export class CabinController {
       //YYYY-MM-DD
       cabin.createdAt = formatDate();
 
-      //image logic should go here cabin.cabinImage = ....
       CabinRepo.addCabin(cabin, resp);
     } catch (error) {}
   }

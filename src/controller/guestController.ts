@@ -5,8 +5,8 @@ import { GuestRepo } from '../repo/guestRepo';
 import generateUniqueId from 'generate-unique-id';
 
 export class GuestController {
-  static async addGuest(req: Request, resp: Response) {
-    console.log('here');
+
+  static addGuest(req: Request, resp: Response) {
     try {
       const guest = req.body as IGuest;
       // random id

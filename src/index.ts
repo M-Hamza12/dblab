@@ -32,7 +32,7 @@ AWS.config.update({
 AWS.config.logger = console;
 app.use(
   cors({
-    origin: 'http://127.0.0.1:5173', // Replace with your React client's URL
+    origin: 'http://localhost:3000', // Replace with your React client's URL
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   })
 );
@@ -75,6 +75,6 @@ mySqlConnection.connect((error) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log(process.env.name + ' server is listening on port 3000');
+app.listen(3001, () => {
+  console.log(process.env.name + ' server is listening on port 3001');
 });

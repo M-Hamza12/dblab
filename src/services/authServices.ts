@@ -41,7 +41,9 @@ export const correctPassword = async (
   enteredPassword: string,
   passwordDB: string
 ) => {
-  return await bcrypt.compare(enteredPassword, passwordDB);
+  // enteredPassword = await bcrypt.hash(enteredPassword, 10);
+  const validity = await bcrypt.compare(enteredPassword, passwordDB);
+  return validity;
   // return enteredPassword === passwordDB;
 };
 

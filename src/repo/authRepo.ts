@@ -9,8 +9,8 @@ export class AuthRepo {
   static async fetchUser(user: ILogin): Promise<IUserDB | null> {
     let q = query.SELECT(['*'], 'signup') + query.WHERE('email', user.email);
     try {
-      const user = await fetchModel<IUserDB>(q);
-      return user;
+      const user = await fetchModel<IUserDB[]>(q);
+      return user[0];
     } catch (error) {
       return null;
     }
@@ -25,6 +25,7 @@ export class AuthRepo {
       });
     } catch (error) {
       resp.status(400).json({
+        status: 'fail',
         error: error,
       });
     }

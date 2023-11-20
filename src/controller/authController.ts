@@ -10,14 +10,16 @@ import { AuthRepo } from '../repo/authRepo';
 
 export class AuthController {
   static async login(req: Request, resp: Response) {
+    console.log('logging in !!');
     const user = <ILogin>req.body;
     try {
       //find the user from the database
       const userDB = await AuthRepo.fetchUser(user);
+      console.log('userDb : ', userDB);
       //incorrect input
       if (!userDB || !(await correctPassword(user.password, userDB.password)))
         throw new Error('email or password is incorrect');
-
+      console.log('here there');
       createSendToken(userDB, 200, resp);
     } catch (error) {
       let message = '';

@@ -27,16 +27,10 @@ export class CabinController {
   }
   static async findAllCabins(req: Request, res: Response) {
     const cabins = await CabinRepo.findAllCabins(req.query as IParamQuery);
-    const { urls, error } = await S3Service.getPresignedUrls();
-    console.log(error);
+    const totalCount = await CabinRepo.getCabinsCount();
     return res.status(200).json({
-      count: cabins?.length,
-      cabins: cabins?.map((cabin) => ({
-        ...cabin,
-        image: urls?.find((url) => url[cabin.cabinImage as string])?.[
-          cabin.cabinImage as string
-        ],
-      })),
+      count: totalCount,
+      cabins,
     } as CabinPaginatedResponse);
   }
 

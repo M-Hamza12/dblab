@@ -39,7 +39,6 @@ export class CabinRepo {
         (cabin) =>
           ({
             id: cabin.id,
-            createdAt: cabin.createdAt,
             name: cabin.name,
             maxCapacity: cabin.maxCapacity,
             regularPrice: cabin.regularPrice,
@@ -53,7 +52,10 @@ export class CabinRepo {
       throw error;
     }
   }
-
+  static async getCabinsCount(): Promise<number> {
+    const cabins = await fetchModel<ICabin[]>('SELECT * FROM CABINS');
+    return cabins.length;
+  }
   static async fetchCabin(cabinId: number): Promise<ICabin | null> {
     try {
       const cabin = await fetchModel<ICabin[]>(

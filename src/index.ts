@@ -60,6 +60,6 @@ mySqlConnection.connect((error) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log(process.env.name + ' server is listening on port 3000');
+app.listen(3001, () => {
+  console.log(process.env.name + ' server is listening on port 3001');
 });

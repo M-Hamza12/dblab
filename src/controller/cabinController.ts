@@ -7,12 +7,12 @@ import {
 import generateUniqueId from 'generate-unique-id';
 import { formatDate } from '../utils/date';
 import { CabinRepo } from '../repo/cabinRepo';
-import S3Service from './../services/S3Service';
 export class CabinController {
   static addCabin(req: Request, resp: Response) {
     try {
       // todo : add permission service here
       const cabin = req.body as ICabin;
+      console.log('cabin ', cabin);
       // random id
       cabin.id = +generateUniqueId({
         useLetters: false,
@@ -22,8 +22,16 @@ export class CabinController {
       //YYYY-MM-DD
       cabin.createdAt = formatDate();
 
-      CabinRepo.addCabin(cabin, resp);
-    } catch (error) {}
+      const res = CabinRepo.addCabin(cabin, resp);
+      resp.status(201).json({
+        status: 'success',
+      });
+    } catch (error) {
+      resp.status(404).json({
+        status: 'fail',
+        error,
+      });
+    }
   }
   static async findAllCabins(req: Request, res: Response) {
     const cabins = await CabinRepo.findAllCabins(req.query as IParamQuery);

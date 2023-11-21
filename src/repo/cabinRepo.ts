@@ -1,27 +1,34 @@
 import { ICabin, IParamQuery } from '../Interface/interface';
 import { mySqlConnection } from '..';
-import { fetchModel, updateModel, deleteModel } from '../repo/genericRepo';
+import {
+  fetchModel,
+  updateModel,
+  deleteModel,
+  addModel,
+} from '../repo/genericRepo';
 import { Response } from 'express';
 import { Query } from '../utils/query';
 
 export class CabinRepo {
-  static addCabin(cabin: ICabin, res: Response) {
-    const query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage,location,floor)
+  static async addCabin(cabin: ICabin, res: Response) {
+    try {
+      const query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage)
                 VALUES(${cabin.id},'${cabin.createdAt}','${cabin.name}'
-                      ,${cabin.maxCapacity},${cabin.regularPrice},${cabin.discount},'${cabin.description}','${cabin.cabinImage}','${cabin.location}','${cabin.floor}')`;
-    mySqlConnection.query(query, (error, rows) => {
-      try {
-        if (error) throw error;
-        res.status(201).json({
-          status: 'success',
-        });
-      } catch (error) {
-        res.status(404).json({
-          status: 'fail',
-          error,
-        });
+                      ,${cabin.maxCapacity},${cabin.regularPrice},${cabin.discount},'${cabin.description}','${cabin.cabinImage}')`;
+      const res = await addModel(query);
+      const { features } = cabin;
+      if (features && features?.length > 0) {
+        const queries = features.map(
+          (feature) =>
+            `INSERT into cabinfeatures(cabinID,featureID) VALUES (${cabin.id},${feature})`
+        );
+        const promises = queries.map((query) => addModel(query));
+        await Promise.all(promises);
       }
-    });
+      return res;
+    } catch (error) {
+      throw error;
+    }
   }
   static async findAllCabins(param: IParamQuery): Promise<ICabin[] | null> {
     try {
@@ -38,8 +45,7 @@ export class CabinRepo {
             discount: cabin.discount,
             description: cabin.description,
             cabinImage: cabin.cabinImage,
-            location: cabin.location,
-            floor: cabin.floor,
+            totalBookings: cabin.totalBookings,
           } as ICabin)
       );
     } catch (error) {

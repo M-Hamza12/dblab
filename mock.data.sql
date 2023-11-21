@@ -9,7 +9,20 @@ CREATE TABLE CABINS(
     cabinImage varchar(1000),
     constraint cabins_pkey primary key(id)
 );
+ALTER TABLE Cabin
+ADD COLUMN totalBookings INT DEFAULT 0;
+CREATE TABLE features (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    featureName VARCHAR(255) NOT NULL
+);
 
+CREATE TABLE CabinFeatures (
+    cabinID bigint(20),
+    featureID int,
+    FOREIGN KEY (cabinID) REFERENCES Cabin(id),
+    FOREIGN KEY (featureID) REFERENCES CabinFeatures(id),
+    PRIMARY KEY (cabinID, featureID)
+);
 CREATE TABLE GUESTS(
     id bigint,
     createdAt date not null,

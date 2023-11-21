@@ -44,7 +44,7 @@ export class Query {
       } `;
     }
     const pageNo = queryString.pageNumber ? +queryString.pageNumber : 1;
-    const limit = queryString.pageSize ? +queryString.pageSize : 10;
+    const limit = queryString.pageSize ? +queryString.pageSize : 30;
     const offset = (pageNo - 1) * limit;
     query += `LIMIT ${offset} , ${limit}`;
     return query;

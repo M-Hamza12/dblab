@@ -77,6 +77,8 @@ export interface ICabin {
   discount: number;
   description: string;
   cabinImage: string;
+  totalBookings: number;
+  features?: string[];
 }
 export interface IUpdateCabin {
   id?: number;

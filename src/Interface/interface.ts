@@ -48,7 +48,6 @@ export interface IBooking {
   observation: boolean;
   cabinId: number;
   guestId: number;
-  hasSmoking: boolean;
   dealId: number;
 }
 export interface IUpdateBooking {
@@ -79,6 +78,7 @@ export interface ICabin {
   cabinImage: string;
   totalBookings: number;
   features?: string[];
+  isAnimalFriendly: boolean;
 }
 export interface IUpdateCabin {
   id?: number;

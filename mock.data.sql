@@ -1,3 +1,58 @@
+-- CREATE TABLE CABINS (
+--     id BIGINT,
+--     createdAt DATE NOT NULL,
+--     name VARCHAR(1000),
+--     maxCapacity INT NOT NULL,
+--     regularPrice REAL NOT NULL,
+--     discount REAL,
+--     description VARCHAR(1000),
+--     cabinImage VARCHAR(1000),
+--     isAnimalFriendly BOOLEAN, 
+--     totalBookings INT DEFAULT 0,
+--     CONSTRAINT cabins_pkey PRIMARY KEY(id)
+-- );
+-- to keep data i'm using this table
+CREATE TABLE Booking (
+  id BIGINT PRIMARY KEY,
+  createdAt DATETIME NOT NULL,
+  startDate DATE NOT NULL,
+  endDate DATE NOT NULL,
+  numNights INT NOT NULL,
+  numGuests INT NOT NULL,
+  cabinPrice DECIMAL(10, 2) NOT NULL,
+  extrasPrice DECIMAL(10, 2) NOT NULL,
+  totalPrice DECIMAL(10, 2) NOT NULL,
+--   can use trigger here to check if status is valid
+  status VARCHAR(255) NOT NULL,
+  checkInDate date default NULL,
+  checkOutDate date default NULL,
+  hasBreakfast BOOLEAN NOT NULL,
+  isPaid BOOLEAN NOT NULL,
+  observation BOOLEAN NOT NULL,
+  cabinId INT,
+  guestId INT,
+  dealId INT,
+  FOREIGN KEY (cabinId) REFERENCES CABINS(id),
+  FOREIGN KEY (guestId) REFERENCES Guests(id),
+  FOREIGN KEY (dealId) REFERENCES Deals(id)
+);
+
+create table deals(
+	dealID bigint,
+    itemId bigint,
+    constraint deals_PK primary key(dealId,itemId),
+    constraint deals_FK foreign key(itemId) REFERENCES items(itemId)
+);
+CREATE TABLE GUESTS(
+    id bigint,
+    createdAt date not null,
+    fullName varchar(100),
+    email varchar(1000),
+    nationalId varchar(1000),
+    countryFlag varchar(1000),
+    profilePicture varchar(1000)
+    constraint guests_pkey primary key(id)
+)
 CREATE TABLE CABINS(
     id bigint,
     createdAt date not null,
@@ -11,6 +66,9 @@ CREATE TABLE CABINS(
 );
 ALTER TABLE Cabin
 ADD COLUMN totalBookings INT DEFAULT 0;
+ALTER TABLE Cabins
+ADD COLUMN isAnimalFriendly boolean DEFAULT false;
+
 CREATE TABLE features (
     id INT PRIMARY KEY AUTO_INCREMENT,
     featureName VARCHAR(255) NOT NULL
@@ -22,6 +80,13 @@ CREATE TABLE CabinFeatures (
     FOREIGN KEY (cabinID) REFERENCES Cabin(id),
     FOREIGN KEY (featureID) REFERENCES CabinFeatures(id),
     PRIMARY KEY (cabinID, featureID)
+);
+create table items(
+	itemId bigint, // just for consistency
+    price int,
+    picture varchar(100),
+    name varchar(100),
+    constraint table_PK primary key(itemId)
 );
 CREATE TABLE GUESTS(
     id bigint,

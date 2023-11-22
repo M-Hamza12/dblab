@@ -76,4 +76,19 @@ export class CabinController {
       });
     }
   }
+  static async getFutureBookings(req: Request, resp: Response) {
+    const id = +req.params.id;
+    try {
+      const dates = await CabinRepo.getFutureDates(id);
+      resp.status(200).json({
+        status: 'success',
+        dates,
+      });
+    } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
 }

@@ -64,7 +64,7 @@ CREATE TABLE CABINS(
     cabinImage varchar(1000),
     constraint cabins_pkey primary key(id)
 );
-ALTER TABLE Cabin
+ALTER TABLE Cabins
 ADD COLUMN totalBookings INT DEFAULT 0;
 ALTER TABLE Cabins
 ADD COLUMN isAnimalFriendly boolean DEFAULT false;
@@ -73,12 +73,18 @@ CREATE TABLE features (
     id INT PRIMARY KEY AUTO_INCREMENT,
     featureName VARCHAR(255) NOT NULL
 );
+--some data
+insert into features(featureName) values('wifi');
+insert into features(featureName) values('swimming pool');
+insert into features(featureName) values('balcony');
+insert into features(featureName) values('waterbed');
+
 
 CREATE TABLE CabinFeatures (
     cabinID bigint(20),
     featureID int,
-    FOREIGN KEY (cabinID) REFERENCES Cabin(id),
-    FOREIGN KEY (featureID) REFERENCES CabinFeatures(id),
+    FOREIGN KEY (cabinID) REFERENCES Cabins(id),
+    FOREIGN KEY (featureID) REFERENCES features(id),
     PRIMARY KEY (cabinID, featureID)
 );
 create table items(
@@ -105,3 +111,21 @@ insert into cabins values(44,'2006-09-11','algsdgsa',12,211000,200,'abca','abc')
 
 insert into guests(id,createdAt,fullName,nationalId,countryFlag) values(12,'2004-12-12','hamza malik','12121212','pakistan');
 insert into guests(id,createdAt,fullName,nationalId,countryFlag) values(122,'2004-12-12','talha malik','12121212','pakistan');
+
+--Procedures
+-- 1
+DELIMITER //
+
+CREATE OR REPLACE PROCEDURE GetFutureBookingsForCabin(IN cabinIdParam INT,dateParam date)
+BEGIN
+    SELECT
+       startDate,endDate
+    FROM
+        Bookings
+    WHERE
+        cabinId = cabinIdParam
+        AND startDate > dateParam;
+END //
+
+DELIMITER ;
+call GetFutureBookingsForCabin(44,'1912-06-01');

@@ -36,3 +36,23 @@ export function deleteModel(query: string): Promise<string> {
     });
   });
 }
+
+export function getFutureBookingProcedure(
+  cabinId: number,
+  date: string
+): Promise<{
+  startDate: Date;
+  endDate: Date;
+}> {
+  return new Promise((resolve, reject) => {
+    mySqlConnection.query(
+      `call GetFutureBookingsForCabin(${cabinId},'${date}');`,
+      (error, rows) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(rows);
+      }
+    );
+  });
+}

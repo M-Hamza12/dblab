@@ -31,6 +31,7 @@ CREATE TABLE GUESTS(
     email varchar(1000),
     nationalId varchar(1000),
     countryFlag varchar(1000),
+    profilePicture varchar(1000)
     constraint guests_pkey primary key(id)
 );
 

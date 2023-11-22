@@ -12,9 +12,9 @@ import { Query } from '../utils/query';
 export class CabinRepo {
   static async addCabin(cabin: ICabin, res: Response) {
     try {
-      const query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage)
+      const query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage,isAnimalFriendly)
                 VALUES(${cabin.id},'${cabin.createdAt}','${cabin.name}'
-                      ,${cabin.maxCapacity},${cabin.regularPrice},${cabin.discount},'${cabin.description}','${cabin.cabinImage}')`;
+                      ,${cabin.maxCapacity},${cabin.regularPrice},${cabin.discount},'${cabin.description}','${cabin.cabinImage}','${cabin.isAnimalFriendly}'}')`;
       const res = await addModel(query);
       const { features } = cabin;
       if (features && features?.length > 0) {
@@ -30,6 +30,7 @@ export class CabinRepo {
       throw error;
     }
   }
+  // todo add total bookings on cabin
   static async findAllCabins(param: IParamQuery): Promise<ICabin[] | null> {
     try {
       const cabins = (await fetchModel(
@@ -45,6 +46,7 @@ export class CabinRepo {
             discount: cabin.discount,
             description: cabin.description,
             cabinImage: cabin.cabinImage,
+            isAnimalFriendly: cabin.isAnimalFriendly,
             totalBookings: cabin.totalBookings,
           } as ICabin)
       );

@@ -21,6 +21,15 @@ export const validateCabin = [
     .withMessage('Regular price must be a number'),
   body('description').notEmpty().withMessage('Description is required'),
   body('cabinImage').notEmpty().withMessage('Cabin images are required'),
+  body('animalFriendly')
+    .optional()
+    .isBoolean()
+    .withMessage('Animal friendly must be a boolean'),
+  body('features')
+    .optional()
+    .isArray()
+    .withMessage('Features must be an array'),
+  body('features.*').isNumeric().withMessage('Each feature must be a number'),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

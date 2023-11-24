@@ -49,6 +49,7 @@ export interface IBooking {
   cabinId: number;
   guestId: number;
   dealId: number;
+  hasSmoking: number;
 }
 export interface IUpdateBooking {
   createdAt?: Date;

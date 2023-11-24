@@ -9,6 +9,6 @@ router.route('/').post(validateCabin, CabinController.addCabin);
 router.route('/').get(CabinController.findAllCabins);
 router.route('/:id').patch(validateUpdateCabin, CabinController.updateCabin);
 router.route('/:id').delete(CabinController.deleteCabin);
-router.route('get-future-booking/:id').get(CabinController.getFutureBookings);
+router.route('/get-future-booking/:id').get(CabinController.getFutureBookings);
 
 export default router;

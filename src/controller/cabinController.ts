@@ -78,6 +78,7 @@ export class CabinController {
   }
   static async getFutureBookings(req: Request, resp: Response) {
     const id = +req.params.id;
+    console.log('future id : ', id);
     try {
       const dates = await CabinRepo.getFutureDates(id);
       resp.status(200).json({

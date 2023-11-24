@@ -96,7 +96,12 @@ export class CabinRepo {
   }
   static async getFutureDates(cabinId: number) {
     try {
-      const bookingDates = getFutureBookingProcedure(cabinId, formatDate());
+      const bookingDates = await getFutureBookingProcedure(
+        cabinId,
+        formatDate()
+      );
+      console.log(bookingDates);
+      return bookingDates;
     } catch (error) {
       throw error;
     }

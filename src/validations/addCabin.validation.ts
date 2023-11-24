@@ -26,9 +26,10 @@ export const validateCabin = [
     .isBoolean()
     .withMessage('Animal friendly must be a boolean'),
   body('features')
-    .optional()
-    .isArray()
-    .withMessage('Features must be an array'),
+    .notEmpty()
+    .withMessage('features are required')
+    .isArray({ min: 1 })
+    .withMessage('Features must be an array of size atleast 1'),
   body('features.*').isNumeric().withMessage('Each feature must be a number'),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);

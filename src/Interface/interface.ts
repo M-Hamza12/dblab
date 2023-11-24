@@ -49,6 +49,7 @@ export interface IBooking {
   cabinId: number;
   guestId: number;
   dealId: number;
+  hasSmoking: number;
 }
 export interface IUpdateBooking {
   createdAt?: Date;
@@ -80,6 +81,20 @@ export interface ICabin {
   features?: string[];
   isAnimalFriendly: boolean;
 }
+export interface IReadCabin {
+  id: number;
+  createdAt: string;
+  name: string;
+  maxCapacity: number;
+  regularPrice: number;
+  discount: number;
+  description: string;
+  cabinImage: string;
+  totalBookings: number;
+  features?: string;
+  isAnimalFriendly: boolean;
+}
+
 export interface IUpdateCabin {
   id?: number;
   createdAt?: string;

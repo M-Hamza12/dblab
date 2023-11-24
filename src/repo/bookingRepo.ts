@@ -18,7 +18,9 @@ export class BookingRepo {
       booking.observation ? booking.observation : ''
     }',${booking.cabinId},${booking.guestId},${
       booking.hasBreakFast
-    },NULL,NULL,${booking.dealId ? booking.dealId : 'NULL'})`;
+    },NULL,NULL,${booking.dealId ? booking.dealId : 'NULL'},${
+      booking.hasSmoking
+    })`;
     mySqlConnection.query(query, (error, rows) => {
       try {
         if (error) throw error;

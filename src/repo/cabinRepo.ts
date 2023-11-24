@@ -1,10 +1,12 @@
-import { ICabin, IParamQuery } from '../Interface/interface';
+import { ICabin, IParamQuery, IReadCabin } from '../Interface/interface';
+import { formatDate } from '../utils/date';
 import { mySqlConnection } from '..';
 import {
   fetchModel,
   updateModel,
   deleteModel,
   addModel,
+  getFutureBookingProcedure,
 } from '../repo/genericRepo';
 import { Response } from 'express';
 import { Query } from '../utils/query';
@@ -34,8 +36,14 @@ export class CabinRepo {
   static async findAllCabins(param: IParamQuery): Promise<ICabin[] | null> {
     try {
       const cabins = (await fetchModel(
-        'SELECT * FROM Cabins' + Query.paramQuery(param)
-      )) as ICabin[];
+        `SELECT c.id ,c.name,c.maxCapacity,c.regularPrice,c.discouNt,c.description,c.cabinImage,c.totalBookings,c.isAnimalFriendly,
+          GROUP_CONCAT(f.featureName SEPARATOR ',') AS features
+        FROM Cabins c
+        JOIN CabinFeatures cf ON c.id = cf.cabinID
+        JOIN features f ON cf.featureID = f.id
+        GROUP BY c.id ,c.name,c.maxCapacity,c.regularPrice,c.discouNt,c.description,c.cabinImage,c.totalBookings,c.isAnimalFriendly` +
+          Query.paramQuery(param)
+      )) as IReadCabin[];
       return cabins?.map(
         (cabin) =>
           ({
@@ -48,6 +56,7 @@ export class CabinRepo {
             cabinImage: cabin.cabinImage,
             isAnimalFriendly: cabin.isAnimalFriendly,
             totalBookings: cabin.totalBookings,
+            features: cabin.features?.split(','),
           } as ICabin)
       );
     } catch (error) {
@@ -81,6 +90,18 @@ export class CabinRepo {
     try {
       let query = Query.deleteById(cabinId, 'CABINS');
       await deleteModel(query);
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async getFutureDates(cabinId: number) {
+    try {
+      const bookingDates = await getFutureBookingProcedure(
+        cabinId,
+        formatDate()
+      );
+      console.log(bookingDates);
+      return bookingDates;
     } catch (error) {
       throw error;
     }

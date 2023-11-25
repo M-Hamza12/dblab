@@ -81,6 +81,12 @@ export interface ICabin {
   features?: string[];
   isAnimalFriendly: boolean;
 }
+
+export interface IFilters {
+  maxCapacity?: number[];
+  features?: number[];
+  priceRange?: { min: number; max: number };
+}
 export interface IReadCabin {
   id: number;
   createdAt: string;

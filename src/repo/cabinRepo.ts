@@ -1,4 +1,9 @@
-import { ICabin, IParamQuery, IReadCabin } from '../Interface/interface';
+import {
+  ICabin,
+  IParamQuery,
+  IReadCabin,
+  IFilters,
+} from '../Interface/interface';
 import { formatDate } from '../utils/date';
 import { mySqlConnection } from '..';
 import {
@@ -33,14 +38,46 @@ export class CabinRepo {
     }
   }
   // todo add total bookings on cabin
-  static async findAllCabins(param: IParamQuery): Promise<ICabin[] | null> {
+  static async findAllCabins(
+    param: IParamQuery,
+    filters: IFilters
+  ): Promise<ICabin[] | null> {
     try {
+      let filterString = '';
+      console.log(filters);
+      if (Object.keys(filters).length > 0) {
+        filterString = ' where ';
+        if (filters.priceRange) {
+          filterString += `(c.regularPrice>= ${filters.priceRange.min} and c.regularPrice <= ${filters.priceRange.max})`;
+        }
+        if (filters.maxCapacity) {
+          filterString += ' and (';
+          filters.maxCapacity.forEach((m, i) => {
+            if (i > 0) filterString += ' or ';
+            filterString += `c.maxCapacity = ${m}`;
+          });
+          filterString += ') ';
+        }
+        if (filters.features) {
+          filterString += ` and c.id in (
+    	select c2.id
+        from cabins c2
+        join cabinFeatures cf2 on cf2.cabinId = c2.id
+        join features f2 on f2.id = cf2.featureId
+        where f2.id in (${filters.features.join(',')})
+        group by c2.id
+        having count(f.id) >= ${filters.features.length}
+    )`;
+        }
+        console.log(filterString);
+      }
       const cabins = (await fetchModel(
         `SELECT c.id ,c.name,c.maxCapacity,c.regularPrice,c.discouNt,c.description,c.cabinImage,c.totalBookings,c.isAnimalFriendly,
           GROUP_CONCAT(f.featureName SEPARATOR ',') AS features
         FROM Cabins c
         JOIN CabinFeatures cf ON c.id = cf.cabinID
         JOIN features f ON cf.featureID = f.id
+        ${filterString}
         GROUP BY c.id ,c.name,c.maxCapacity,c.regularPrice,c.discouNt,c.description,c.cabinImage,c.totalBookings,c.isAnimalFriendly` +
           Query.paramQuery(param)
       )) as IReadCabin[];

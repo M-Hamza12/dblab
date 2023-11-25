@@ -35,6 +35,16 @@ export class BookingRepo {
       }
     });
   }
+  static async getBookingsByCabinId(cabinId: number) {
+    try {
+      const bookings = await fetchModel<IBooking[]>(
+        `SELECT startDate , endDate FROM BOOKINGS WHERE cabinId = ${cabinId}`
+      );
+      return bookings;
+    } catch (error) {
+      throw error;
+    }
+  }
   static async fetchGuest(guestId: number) {
     try {
       const guest = await GuestRepo.fetchGuest(guestId);

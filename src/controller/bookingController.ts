@@ -57,6 +57,24 @@ export class BookingController {
       });
     }
   }
+  static async getBookingsByGuestId(req: Request, resp: Response) {}
+  static async getBookingsByCabinId(req: Request, resp: Response) {
+    try {
+      const bookings = await BookingRepo.getBookingsByCabinId(
+        +req.params.cabinId
+      );
+      console.log(bookings);
+      resp.status(200).json({
+        status: 'success',
+        bookings,
+      });
+    } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
   static async getAllBookings(req: Request, resp: Response) {
     try {
       const allBookings = await BookingRepo.getAllBookings(req.params);

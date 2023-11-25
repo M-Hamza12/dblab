@@ -12,7 +12,9 @@ router.route('/todayactivity').get(BookingController.getTodayActivity);
 
 router.route('/:id').get(BookingController.getBookingById);
 router.route('/:id').patch(BookingController.updateBooking);
-
 router.route('/pastbookings/:days').get(BookingController.pastDaysBooking);
+router
+  .route('/cabin/:cabinId/bookedDates')
+  .get(BookingController.getBookingsByCabinId);
 
 export default router;

@@ -9,8 +9,8 @@ export const validateBooking = [
   // AuthController.protect,
   //data validation
 
-  body('startDate').isDate().withMessage('enter date value'),
-  body('endDate').isDate().withMessage('enter date value'),
+  body('startDate').isISO8601().withMessage('enter date value'),
+  body('endDate').isISO8601().withMessage('enter date value'),
   body('numNights')
     .notEmpty()
     .withMessage('numNights is required')

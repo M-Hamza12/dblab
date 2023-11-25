@@ -12,8 +12,8 @@
 --     CONSTRAINT cabins_pkey PRIMARY KEY(id)
 -- );
 -- to keep data i'm using this table
-CREATE TABLE Booking (
-  id BIGINT PRIMARY KEY,
+CREATE TABLE Bookings (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
   createdAt DATETIME NOT NULL,
   startDate DATE NOT NULL,
   endDate DATE NOT NULL,
@@ -29,12 +29,13 @@ CREATE TABLE Booking (
   hasBreakfast BOOLEAN NOT NULL,
   isPaid BOOLEAN NOT NULL,
   observation BOOLEAN NOT NULL,
-  cabinId INT,
-  guestId INT,
-  dealId INT,
+  cabinId BIGINT,
+  guestId BIGINT,
+  dealId BIGINT,
+  paymentMethod VARCHAR(255) NOT NULL default 'cash',
   FOREIGN KEY (cabinId) REFERENCES CABINS(id),
   FOREIGN KEY (guestId) REFERENCES Guests(id),
-  FOREIGN KEY (dealId) REFERENCES Deals(id)
+  FOREIGN KEY (dealId) REFERENCES Deals(dealID)
 );
 
 create table deals(
@@ -107,12 +108,31 @@ insert into cabinFeatures values(38,4);
 
 
 create table items(
-	itemId bigint, // just for consistency
-    price int,
+	itemId bigint , // just for consistency
+    price int not null default 10,
     picture varchar(100),
     name varchar(100),
     constraint table_PK primary key(itemId)
 );
+INSERT INTO items (itemId, name, price, picture) VALUES
+(4, 'Oatmeal Bar', 20, 'oatmeal_bar_picture.jpg'),
+(5, 'Pancakes', 20, 'pancakes_picture.jpg'),
+(6, 'Yogurt', 20, 'yogurt_picture.jpg'),
+(7, 'Granola', 20, 'granola_picture.jpg'),
+(8, 'Fruit', 20, 'fruit_picture.jpg'),
+(9, 'Muffins', 20, 'muffins_picture.jpg'),
+(10, 'Banana Pancakes', 20, 'banana_pancakes_picture.jpg'),
+(11, 'Toast with Nut Butter', 20, 'toast_nut_butter_picture.jpg'),
+(12, 'Salmon Toast', 20, 'salmon_toast_picture.jpg'),
+(13, 'Dippy Eggs', 20, 'dippy_eggs_picture.jpg'),
+(14, 'No Breakfast', 20, 'not_included_picture.jpg'),
+(15, 'Croissant', 20, 'croissant_picture.jpg'),
+(16, 'Cereal', 20, 'cereal_picture.jpg'),
+(17, 'Smoothie', 20, 'smoothie_picture.jpg'),
+(18, 'Bagel', 20, 'bagel_picture.jpg'),
+(19, 'French Toast', 20, 'french_toast_picture.jpg'),
+(20, 'Tea', 20, 'tea_picture.jpg');
+
 CREATE TABLE GUESTS(
     id bigint,
     createdAt date not null,
@@ -131,3 +151,16 @@ insert into cabins values(44,'2006-09-11','algsdgsa',12,211000,200,'abca','abc')
 insert into guests(id,createdAt,fullName,nationalId,countryFlag) values(12,'2004-12-12','hamza malik','12121212','pakistan');
 insert into guests(id,createdAt,fullName,nationalId,countryFlag) values(122,'2004-12-12','talha malik','12121212','pakistan');
 
+
+INSERT INTO Bookings (createdAt, startDate, endDate, numNights, numGuests, cabinPrice, extrasPrice, totalPrice, status, hasBreakfast, isPaid, observation, cabinId, guestId)
+VALUES (NOW(), '2023-11-26', '2023-11-28', 2, 1, 100.00, 20.00, 120.00, 'Confirmed', TRUE, FALSE, FALSE, 22, 12);
+INSERT INTO Bookings (createdAt, startDate, endDate, numNights, numGuests, cabinPrice, extrasPrice, totalPrice, status, hasBreakfast, isPaid, observation, cabinId, guestId)
+VALUES (NOW(), '2023-11-29', '2023-11-30', 1, 1, 120.00, 30.00, 150.00, 'Confirmed', FALSE, FALSE, FALSE, 33, 122);
+INSERT INTO Bookings (createdAt, startDate, endDate, numNights, numGuests, cabinPrice, extrasPrice, totalPrice, status, hasBreakfast, isPaid, observation, cabinId, guestId)
+VALUES (NOW(), '2023-11-30', '2023-12-01', 1, 1, 150.00, 40.00, 190.00, 'Confirmed', TRUE, FALSE, FALSE, 44, 12);
+INSERT INTO Bookings (createdAt, startDate, endDate, numNights, numGuests, cabinPrice, extrasPrice, totalPrice, status, hasBreakfast, isPaid, observation, cabinId, guestId)
+VALUES (NOW(), '2023-12-05', '2023-12-07', 2, 1, 100.00, 20.00, 120.00, 'Confirmed', TRUE, FALSE, FALSE, 22, 122);
+INSERT INTO Bookings (createdAt, startDate, endDate, numNights, numGuests, cabinPrice, extrasPrice, totalPrice, status, hasBreakfast, isPaid, observation, cabinId, guestId)
+VALUES (NOW(), '2023-12-08', '2023-12-10', 2, 1, 120.00, 30.00, 150.00, 'Confirmed', FALSE, FALSE, FALSE, 33, 12);
+INSERT INTO Bookings (createdAt, startDate, endDate, numNights, numGuests, cabinPrice, extrasPrice, totalPrice, status, hasBreakfast, isPaid, observation, cabinId, guestId)
+VALUES (NOW(), '2023-12-11', '2023-12-15', 4, 1, 150.00, 40.00, 190.00, 'Confirmed', TRUE, FALSE, FALSE, 44, 122);

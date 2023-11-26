@@ -95,6 +95,19 @@ export class BookingRepo {
       throw error;
     }
   }
+  static async getBookingByGuestId(
+    guestId: number
+  ): Promise<IBooking[] | null> {
+    try {
+      const booking = await fetchModel<IBooking[]>(
+        'SELECT * FROM BOOKINGS WHERE guestId = ' + guestId
+      );
+      if (!booking) throw new Error('No such booking');
+      return booking;
+    } catch (error) {
+      throw error;
+    }
+  }
   static async updateBooking(bookingId: number, data: any) {
     try {
       const query = Query.updateById(bookingId, 'bookings', data);

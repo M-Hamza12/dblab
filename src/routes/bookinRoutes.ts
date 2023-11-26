@@ -11,6 +11,7 @@ router.route('/').post(validateBooking, BookingController.addBooking);
 router.route('/todayactivity').get(BookingController.getTodayActivity);
 
 router.route('/:id').get(BookingController.getBookingById);
+router.route('/guest/:id').get(BookingController.getBookingsByGuestId);
 router.route('/:id').patch(BookingController.updateBooking);
 router.route('/pastbookings/:days').get(BookingController.pastDaysBooking);
 router

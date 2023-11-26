@@ -129,6 +129,13 @@ export interface IParamQuery {
   pageNumber?: string;
   sortBy?: 'asc' | 'desc';
 }
+export interface IFood {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+}
+
 export interface Iitem {
   price: number;
   picture: string;

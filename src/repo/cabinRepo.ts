@@ -19,6 +19,7 @@ import { Query } from '../utils/query';
 export class CabinRepo {
   static async addCabin(cabin: ICabin, res: Response) {
     try {
+      console.log('calling');
       const query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage,isAnimalFriendly)
                 VALUES(${cabin.id},'${cabin.createdAt}','${cabin.name}'
                       ,${cabin.maxCapacity},${cabin.regularPrice},${cabin.discount},'${cabin.description}','${cabin.cabinImage}','${cabin.isAnimalFriendly}'}')`;
@@ -45,7 +46,7 @@ export class CabinRepo {
     try {
       let filterString = '';
       console.log(filters);
-      if (Object.keys(filters).length > 0) {
+      if (filters && Object.keys(filters).length > 0) {
         filterString = ' where ';
         if (filters.priceRange) {
           filterString += `(c.regularPrice>= ${filters.priceRange.min} and c.regularPrice <= ${filters.priceRange.max})`;

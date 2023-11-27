@@ -8,6 +8,7 @@ const query = new Query();
 export class itemRepo {
   static async getAllItems(param: IParamQuery) {
     try {
+      console.log('items ', param);
       return (await fetchModel(
         'SELECT * FROM ITEMS ' + Query.paramQuery(param)
       )) as Iitem[];

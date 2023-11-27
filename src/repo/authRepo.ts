@@ -1,4 +1,4 @@
-import { ILogin, IUserDB } from '../Interface/interface';
+import { IGuest, ILogin, IUserDB } from '../Interface/interface';
 import { Response } from 'express';
 import { mySqlConnection } from '..';
 import { addModel, fetchModel } from './genericRepo';
@@ -6,17 +6,20 @@ import { Query } from '../utils/query';
 let query = new Query();
 
 export class AuthRepo {
-  static async fetchUser(user: ILogin): Promise<IUserDB | null> {
-    let q = query.SELECT(['*'], 'signup') + query.WHERE('email', user.email);
+  static async fetchUser(user: ILogin): Promise<IGuest | null> {
+    let q = query.SELECT(['*'], 'guests') + query.WHERE('email', user.email);
     try {
-      const user = await fetchModel<IUserDB[]>(q);
+      const user = await fetchModel<IGuest[]>(q);
+      console.log('user : ', user);
       return user[0];
     } catch (error) {
       return null;
     }
   }
-  static async addUser(newUser: ILogin, resp: Response) {
-    let query = `INSERT INTO signup(email,password) values('${newUser.email}','${newUser.password}')`;
+  static async addUser(newUser: IGuest, resp: Response) {
+    const defaultProfilePicture =
+      process.env.DEFAULT_PROFILE_PICTURE ?? 'default.png';
+    let query = `INSERT INTO guests (email, password, nationalId, countryFlag, profilePicture , fullName ) VALUES ('${newUser.email}', '${newUser.password}', '${newUser.nationalId}', '${newUser.countryFlag}', '${newUser.profilePicture}','${newUser.fullName}')`;
     try {
       const message = await addModel(query);
       resp.status(201).json({

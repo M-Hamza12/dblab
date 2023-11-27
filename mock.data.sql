@@ -45,7 +45,7 @@ create table deals(
     constraint deals_FK foreign key(itemId) REFERENCES items(itemId)
 );
 CREATE TABLE GUESTS(
-    id bigint,
+    id bigint AUTO_INCREMENT,
     createdAt date not null,
     fullName varchar(100),
     email varchar(1000),
@@ -53,7 +53,14 @@ CREATE TABLE GUESTS(
     countryFlag varchar(1000),
     profilePicture varchar(1000)
     constraint guests_pkey primary key(id)
+    password varchar(1000) not null 
+    role varchar(100) default 'guest'
 )
+-- to keep data i'm using this table
+ALTER TABLE Guests
+ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'guest',
+ADD COLUMN password VARCHAR(255) NOT NULL DEFAULT '12345678';
+
 CREATE TABLE CABINS(
     id bigint,
     createdAt date not null,

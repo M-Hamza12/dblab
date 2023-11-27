@@ -6,14 +6,20 @@ export class itemController {
   static async addItem(req: Request, resp: Response) {
     try {
       const item = req.body as Iitem;
-      item.id = +generateUniqueId({
-        useLetters: false,
-        useNumbers: true,
-        length: 10,
-      });
+      item.id = item.id
+        ? item.id
+        : +generateUniqueId({
+            useLetters: false,
+            useNumbers: true,
+            length: 10,
+          });
+      console.log('item ', item);
       await itemRepo.addItem(item);
       resp.status(200).json({
         status: 'success',
+        item: {
+          itemId: item.id,
+        },
       });
     } catch (error) {
       resp.status(403).json({

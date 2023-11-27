@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ILogin, IUserSingUp } from '../Interface/interface';
+import { IGuest, ILogin, IUserSingUp } from '../Interface/interface';
 import {
   createSendToken,
   correctPassword,
@@ -11,6 +11,26 @@ import { AuthRepo } from '../repo/authRepo';
 export class AuthController {
   static async login(req: Request, resp: Response) {
     console.log('logging in !!');
+    const user = <ILogin>req.body;
+    try {
+      //find the user from the database
+      const userDB = await AuthRepo.fetchUser(user);
+      console.log('userDb : ', userDB);
+      //incorrect input
+      if (!userDB || !(await correctPassword(user.password, userDB.password)))
+        throw new Error('email or password is incorrect');
+      console.log('here there');
+      createSendToken(userDB, 200, resp);
+    } catch (error) {
+      let message = '';
+      if (error instanceof Error) message = error.message;
+      return resp.status(400).json({
+        status: 'fail',
+        message: message,
+      });
+    }
+  }
+  static async loginGuest(req: Request, resp: Response) {
     const user = <ILogin>req.body;
     try {
       //find the user from the database
@@ -49,15 +69,15 @@ export class AuthController {
   }
 
   static async signup(req: Request, resp: Response) {
-    const user = <IUserSingUp>req.body;
+    const user = req.body as IGuest & Partial<IUserSingUp>;
     try {
       if (user.password !== user.confirmPassword)
         throw new Error('passwords doesnot match');
 
       //encrypting password
-      const encrptedPassword: string = await hashPassword(user.password);
+      const encrptedPassword: string = await hashPassword(user?.password);
 
-      AuthRepo.addUser({ password: encrptedPassword, email: user.email }, resp);
+      AuthRepo.addUser({ ...user, password: encrptedPassword }, resp);
     } catch (error) {
       let message: string = '';
       if (error instanceof Error) message = error.message;

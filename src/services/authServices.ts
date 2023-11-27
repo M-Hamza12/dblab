@@ -18,22 +18,23 @@ export const createSendToken = (
   res: Response
 ) => {
   const token = signToken(user.id);
+  const expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
   const cookieOptions = {
-    expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    expires,
     httpOnly: true,
   };
   //   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
   res.cookie('jwt', token, cookieOptions);
-
+  const { password, ..._user } = user;
   // Remove password from output
 
   res.status(statusCode).json({
     status: 'success',
     token,
-    data: {
-      emai: user.email,
-      id: user.id,
+    expires,
+    user: {
+      ..._user,
     },
   });
 };

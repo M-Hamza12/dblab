@@ -21,8 +21,11 @@ export interface IGuest {
   fullName: string;
   email: string;
   nationalId: string;
-  natioanality: string;
+  nationality: string;
   countryFlag: string;
+  password: string;
+  role: string;
+  profilePicture: string;
 }
 export interface IUpdateGuest {
   createdAt?: string;

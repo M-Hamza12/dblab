@@ -9,6 +9,11 @@ const router = express.Router();
 
 router.route('/').get(getAllUser);
 router.route('/login').post(validateLogin, AuthController.login);
+router.route('/guest/login').post(validateLogin, AuthController.login);
+router.route('/guest/signup').post(
+  validateSignup,
+  AuthController.signup //login
+);
 router.route('/signup').post(
   validateSignup,
   AuthController.signup //login

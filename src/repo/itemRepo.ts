@@ -1,13 +1,32 @@
-import { Iitem } from '../Interface/interface';
+import { IParamQuery, Iitem } from '../Interface/interface';
 import { fetchModel, addModel, updateModel, deleteModel } from './genericRepo';
 import { Query } from '../utils/query';
+import { param } from 'express-validator';
 
 const query = new Query();
 
 export class itemRepo {
-  static async getAllItems() {
+  static async getAllItems(param: IParamQuery) {
     try {
-      return (await fetchModel('SELECT * FROM ITEMS')) as Iitem[];
+      return (await fetchModel(
+        'SELECT * FROM ITEMS ' + Query.paramQuery(param)
+      )) as Iitem[];
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async getCount() {
+    try {
+      return (await fetchModel<Iitem[]>('Select * from items')).length;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async getItemById(itemId: number) {
+    try {
+      return await fetchModel<Iitem>(
+        'Select * from items where itemId = ' + itemId
+      );
     } catch (error) {
       throw error;
     }

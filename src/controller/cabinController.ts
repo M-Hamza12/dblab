@@ -7,6 +7,7 @@ import {
 import generateUniqueId from 'generate-unique-id';
 import { formatDate } from '../utils/date';
 import { CabinRepo } from '../repo/cabinRepo';
+
 export class CabinController {
   static addCabin(req: Request, resp: Response) {
     try {

@@ -84,6 +84,12 @@ export interface ICabin {
   features?: string[];
   isAnimalFriendly: boolean;
 }
+
+export interface IFilters {
+  maxCapacity?: number[];
+  features?: number[];
+  priceRange?: { min: number; max: number };
+}
 export interface IReadCabin {
   id: number;
   createdAt: string;
@@ -126,6 +132,13 @@ export interface IParamQuery {
   pageNumber?: string;
   sortBy?: 'asc' | 'desc';
 }
+export interface IFood {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+}
+
 export interface Iitem {
   price: number;
   picture: string;

@@ -64,7 +64,7 @@ export class BookingRepo {
   static async getAllBookings(param: IParamQuery): Promise<IBooking[] | null> {
     try {
       const bookings = (await fetchModel(
-        'SELECT * FROM Bookings' + Query.paramQuery(param)
+        'SELECT * FROM Bookings ' + Query.paramQuery(param)
       )) as IBooking[];
       return bookings;
     } catch (error) {

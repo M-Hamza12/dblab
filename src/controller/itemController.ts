@@ -30,11 +30,26 @@ export class itemController {
   }
   static async getAllItems(req: Request, resp: Response) {
     try {
-      const items = await itemRepo.getAllItems();
+      const items = await itemRepo.getAllItems(req.query);
+      const count = await itemRepo.getCount();
       resp.status(200).json({
         status: 'sucess',
-        result: items.length,
+        result: count,
         items,
+      });
+    } catch (error) {
+      resp.status(403).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
+  static async getItemById(req: Request, resp: Response) {
+    try {
+      const item = await itemRepo.getItemById(+req.params.id);
+      resp.status(200).json({
+        status: 'sucess',
+        item,
       });
     } catch (error) {
       resp.status(403).json({

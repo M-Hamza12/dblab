@@ -47,6 +47,7 @@ export class Query {
     const limit = queryString.pageSize ? +queryString.pageSize : 30;
     const offset = (pageNo - 1) * limit;
     query += `LIMIT ${offset} , ${limit}`;
+    console.log('query ', query);
     return query;
   }
 }

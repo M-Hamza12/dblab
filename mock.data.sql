@@ -171,3 +171,33 @@ INSERT INTO Bookings (createdAt, startDate, endDate, numNights, numGuests, cabin
 VALUES (NOW(), '2023-12-08', '2023-12-10', 2, 1, 120.00, 30.00, 150.00, 'Confirmed', FALSE, FALSE, FALSE, 33, 12);
 INSERT INTO Bookings (createdAt, startDate, endDate, numNights, numGuests, cabinPrice, extrasPrice, totalPrice, status, hasBreakfast, isPaid, observation, cabinId, guestId)
 VALUES (NOW(), '2023-12-11', '2023-12-15', 4, 1, 150.00, 40.00, 190.00, 'Confirmed', TRUE, FALSE, FALSE, 44, 122);
+
+
+create table Orders(
+	id bigInt,
+    totalPrice int,
+    bookingId bigInt,
+    orderDate date,
+    PRIMARY KEY (id),
+    FOREIGN KEY(bookingId) REFERENCES Bookings(id)
+);
+insert into orders values(1,2000,2730419903,'2023-01-01');
+insert into orders values(2,20020,4469851924,'2023-01-01');
+
+create table OrderItems(
+	orderId bigInt,
+    itemId int, -- remember in my scehma it is int and not bigINT so chceck for your schema
+    quantity int,
+    PRIMARY KEY(orderId,itemId),
+    FOREIGN KEY(orderId) REFERENCES Orders(id),
+    FOREIGN KEY(itemId) REFERENCES items(itemId) 
+);
+
+insert into orderItems values(1,2,5);
+insert into orderItems values(1,3,23);
+insert into orderItems values(1,4,22);
+insert into orderItems values(1,5,3);
+insert into orderItems values(2,5,5);
+insert into orderItems values(2,6,23);
+insert into orderItems values(2,7,22);
+insert into orderItems values(2,8,3);

@@ -63,10 +63,25 @@ export class BookingRepo {
   }
   static async getAllBookings(param: IParamQuery): Promise<IBooking[] | null> {
     try {
+      const status: string = param.status
+        ? ` where status = '${param.status}'`
+        : '';
       const bookings = (await fetchModel(
-        'SELECT * FROM Bookings ' + Query.paramQuery(param)
+        `SELECT bookings.* , cabins.name as 'cabinName' , guests.fullName as 'guestName',guests.email FROM Bookings
+         inner join cabins on cabins.id = bookings.cabinId
+          inner join guests on guests.id = bookings.guestId
+          ${status} ` + Query.paramQuery(param)
       )) as IBooking[];
+
       return bookings;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async totalBookings(): Promise<number> {
+    try {
+      const bookings = await fetchModel<IBooking[]>('SELECT * FROM Bookings ');
+      return bookings.length;
     } catch (error) {
       throw error;
     }

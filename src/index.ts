@@ -30,6 +30,7 @@ import bookingRouter from './routes/bookinRoutes';
 import dealRouter from './routes/dealRoute';
 import itemRouter from './routes/itemRoutes';
 import feaureRouter from './routes/featureRoutes';
+import orderRouter from './routes/orderRoutes';
 dotenv.config({
   path: './src/config.env',
 });
@@ -43,6 +44,7 @@ app.use('/api/v1/booking', bookingRouter);
 app.use('/api/v1/deals', dealRouter);
 app.use('/api/v1/item', itemRouter);
 app.use('/api/v1/feature', feaureRouter);
+app.use('/api/v1/order', orderRouter);
 
 export const mySqlConnection = mysql.createConnection({
   host: 'localhost',

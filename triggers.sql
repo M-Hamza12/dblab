@@ -15,3 +15,17 @@ BEGIN
 END; //
 
 DELIMITER ;
+
+
+DELIMITER //
+
+CREATE OR REPLACE TRIGGER addPrice
+AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+    update bookings
+    set totalPrice = totalPrice + New.totalPrice
+    where bookings.id = New.bookingId;
+END; //
+
+DELIMITER ;

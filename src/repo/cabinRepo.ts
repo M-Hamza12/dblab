@@ -46,13 +46,21 @@ export class CabinRepo {
     try {
       let filterString = '';
       console.log(filters);
+
       if (filters && Object.keys(filters).length > 0) {
         filterString = ' where ';
+        if (filters.discount && filters.discount === 'true') {
+          filterString += ' c.discount>0 ';
+        }
+        if (filters.discount && filters.discount === 'false') {
+          filterString += ' c.discount = 0 ';
+        }
         if (filters.priceRange) {
+          if (filterString !== ' where ') filterString += ' and ';
           filterString += `(c.regularPrice>= ${filters.priceRange.min} and c.regularPrice <= ${filters.priceRange.max})`;
         }
         if (filters.maxCapacity) {
-          filterString += ' and (';
+          if (filterString !== ' where ') filterString += ' and (';
           filters.maxCapacity.forEach((m, i) => {
             if (i > 0) filterString += ' or ';
             filterString += `c.maxCapacity = ${m}`;
@@ -60,7 +68,8 @@ export class CabinRepo {
           filterString += ') ';
         }
         if (filters.features) {
-          filterString += ` and c.id in (
+          if (filterString !== ' where ') filterString += ' and ';
+          filterString += ` c.id in (
     	select c2.id
         from cabins c2
         join cabinFeatures cf2 on cf2.cabinId = c2.id
@@ -73,13 +82,13 @@ export class CabinRepo {
         console.log(filterString);
       }
       const cabins = (await fetchModel(
-        `SELECT c.id ,c.name,c.maxCapacity,c.regularPrice,c.discouNt,c.description,c.cabinImage,c.totalBookings,c.isAnimalFriendly,
+        `SELECT c.id ,c.name,c.maxCapacity,c.regularPrice,c.discount,c.description,c.cabinImage,c.totalBookings,c.isAnimalFriendly,
           GROUP_CONCAT(f.featureName SEPARATOR ',') AS features
         FROM Cabins c
         JOIN CabinFeatures cf ON c.id = cf.cabinID
         JOIN features f ON cf.featureID = f.id
         ${filterString}
-        GROUP BY c.id ,c.name,c.maxCapacity,c.regularPrice,c.discouNt,c.description,c.cabinImage,c.totalBookings,c.isAnimalFriendly` +
+        GROUP BY c.id ,c.name,c.maxCapacity,c.regularPrice,c.discount,c.description,c.cabinImage,c.totalBookings,c.isAnimalFriendly` +
           Query.paramQuery(param)
       )) as IReadCabin[];
       return cabins?.map(

@@ -89,6 +89,7 @@ export interface IFilters {
   maxCapacity?: number[];
   features?: number[];
   priceRange?: { min: number; max: number };
+  discount?: 'true' | 'false';
 }
 export interface IReadCabin {
   id: number;
@@ -131,6 +132,7 @@ export interface IParamQuery {
   pageSize?: string;
   pageNumber?: string;
   sortBy?: 'asc' | 'desc';
+  status?: 'checked-in' | 'checked-out' | 'unconfirmed';
 }
 export interface IFood {
   id: number;
@@ -148,4 +150,14 @@ export interface Iitem {
 export interface Ideal {
   dealId: number;
   itemId: number;
+}
+
+export interface IOrder {
+  id: number;
+  bookingId: number;
+  items: {
+    itemId: number;
+    price: number;
+    quantity: number;
+  }[];
 }

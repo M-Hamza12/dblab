@@ -123,7 +123,7 @@ export class BookingRepo {
       throw error;
     }
   }
-  static async updateBooking(bookingId: number, data: any) {
+  static async updateBooking(bookingId: number, data: Partial<IBooking>) {
     try {
       const query = Query.updateById(bookingId, 'bookings', data);
 

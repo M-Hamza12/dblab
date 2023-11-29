@@ -92,7 +92,6 @@ export class BookingController {
   static async getAllBookings(req: Request, resp: Response) {
     try {
       const allBookings = await BookingRepo.getAllBookings(req.query);
-
       const totalCount = await BookingRepo.totalBookings();
 
       if (!allBookings) throw new Error('no booking');
@@ -140,6 +139,8 @@ export class BookingController {
     try {
       const id = +req.params.id;
       const data = req.body as IUpdateBooking;
+      console.log('_body ', req.body);
+
       //If you are altering the date or maybe booking other cabin than hv to check dates
       if (data.startDate && data.endDate && data.cabinId) {
         if (
@@ -151,7 +152,6 @@ export class BookingController {
           ))
         )
           throw new Error('Confilicting dates for the given cabin and date');
-        data.extrasPrice = data.hasBreakFast ? 100 : 0;
 
         // data.totalPrice = data.cabinPrice + data.extrasPrice
         await BookingRepo.updateBooking(id, req.body);
@@ -169,6 +169,7 @@ export class BookingController {
       } else
         throw new Error('Provide both start and end date along with cabinId');
     } catch (error) {
+      console.log('error', error);
       resp.status(400).json({
         status: 'fail',
         error: error instanceof Error ? error.message : 'something went wrong',

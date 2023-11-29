@@ -28,6 +28,7 @@ CREATE TABLE Bookings (
   checkOutDate date default NULL,
   hasBreakfast BOOLEAN NOT NULL,
   isPaid BOOLEAN NOT NULL,
+--   observation is string
   observation BOOLEAN NOT NULL,
   cabinId BIGINT,
   guestId BIGINT,
@@ -37,7 +38,8 @@ CREATE TABLE Bookings (
   FOREIGN KEY (guestId) REFERENCES Guests(id),
   FOREIGN KEY (dealId) REFERENCES Deals(dealID)
 );
-
+ALTER TABLE bookings 
+add COLUMN description varchar(100) 
 create table deals(
 	dealID bigint,
     itemId bigint,
@@ -186,7 +188,7 @@ insert into orders values(2,20020,4469851924,'2023-01-01');
 
 create table OrderItems(
 	orderId bigInt,
-    itemId int, -- remember in my scehma it is int and not bigINT so chceck for your schema
+    itemId bigint, -- remember in my scehma it is int and not bigINT so chceck for your schema
     quantity int,
     PRIMARY KEY(orderId,itemId),
     FOREIGN KEY(orderId) REFERENCES Orders(id),

@@ -8,16 +8,22 @@ export class BookingService {
     try {
       console.log('validating dates');
       const bookings = await BookingRepo.getBookingByCabinId(cabinId);
-      if (!bookings) return true;
-      if (bookings.length === 0) return true;
+      if (!bookings || !bookings.length) return true;
       for (const b of bookings) {
         if (
           new Date(startDate) >= b.startDate &&
           new Date(startDate) <= b.endDate
-        )
+        ) {
+          console.log('conflict found with booking ', b);
           return false;
-        if (new Date(endDate) >= b.startDate && new Date(endDate) <= b.endDate)
+        }
+        if (
+          new Date(endDate) >= b.startDate &&
+          new Date(endDate) <= b.endDate
+        ) {
+          console.log('conflict found with booking ', b);
           return false;
+        }
       }
       console.log('valid');
       return true;

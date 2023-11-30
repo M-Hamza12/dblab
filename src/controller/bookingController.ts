@@ -4,6 +4,25 @@ import { BookingRepo } from '../repo/bookingRepo';
 import { BookingService } from '../services/bookingService';
 import generateUniqueId from 'generate-unique-id';
 
+interface BookingDate {
+  startDate: string;
+  endDate: string;
+  id: number;
+}
+const getBookingIdIfToday = (dates: BookingDate[]) => {
+  const today = new Date();
+
+  for (const { id, startDate, endDate } of dates) {
+    const sDate = new Date(startDate);
+    const eDate = new Date(endDate);
+
+    // Check if today is between start date and end date (inclusive)
+    if (today >= sDate && today <= eDate) {
+      return id;
+    }
+  }
+  return null;
+};
 export class BookingController {
   static async addBooking(req: Request, resp: Response) {
     try {
@@ -60,7 +79,7 @@ export class BookingController {
   static async getBookingsByGuestId(req: Request, resp: Response) {
     try {
       const bookings = await BookingRepo.getBookingByGuestId(+req.params.id);
-      console.log(bookings);
+      // console.log(bookings);
       resp.status(200).json({
         status: 'success',
         bookings,
@@ -77,7 +96,7 @@ export class BookingController {
       const bookings = await BookingRepo.getBookingsByCabinId(
         +req.params.cabinId
       );
-      console.log(bookings);
+      // console.log(bookings);
       resp.status(200).json({
         status: 'success',
         bookings,
@@ -110,12 +129,15 @@ export class BookingController {
   static async getBookingById(req: Request, resp: Response) {
     try {
       const booking = await BookingRepo.getBookingById(+req.params.id);
-      resp.status(200).json({
+      // always use return when you are sending reponse otherwise it will throw error
+      // if some other code tries to send response
+      // [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+      return resp.status(200).json({
         status: 'success',
         booking,
       });
     } catch (error) {
-      resp.status(400).json({
+      return resp.status(400).json({
         status: 'fail',
         error,
       });
@@ -202,6 +224,72 @@ export class BookingController {
         bookings,
       });
     } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
+  static async getBookingDatesByGuestId(req: Request, resp: Response) {
+    try {
+      const { id } = req.params;
+      console.log('guestId ', id);
+      if (!id) {
+        return resp.status(400).json({
+          status: 'fail',
+          error: {
+            message: 'Please provide guest id',
+          },
+        });
+      }
+      const dates = await BookingRepo.getBookingDatesByGuestId(+id);
+      return resp.status(200).json({
+        status: 'success',
+        dates,
+      });
+    } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
+  static async hasBookingStartedToday(req: Request, resp: Response) {
+    try {
+      const { id } = req.params;
+      console.log('id ', id);
+      if (!id) {
+        return resp.status(400).json({
+          status: 'fail',
+          error: {
+            message: 'Please provide guest id',
+          },
+        });
+      }
+      const dates = await BookingRepo.getBookingDatesByGuestId(+id);
+      if (!dates.length)
+        return resp.status(200).json({
+          status: 'success',
+          isBookingToday: false,
+        });
+      const isBookingToday = getBookingIdIfToday(
+        dates as unknown as BookingDate[]
+      );
+      if (!isBookingToday) {
+        return resp.status(200).json({
+          status: 'success',
+          isBookingToday: false,
+          booking: null,
+        });
+      }
+      const booking = await BookingRepo.getBookingById(isBookingToday);
+      return resp.status(200).json({
+        status: 'success',
+        isBookingToday: true,
+        booking,
+      });
+    } catch (error) {
+      console.log('error today ', error);
       resp.status(400).json({
         status: 'fail',
         error,

@@ -10,17 +10,25 @@ import { Query } from '../utils/query';
 export class BookingRepo {
   static addBooking(booking: IBooking, resp: Response) {
     console.log(booking);
-    let query = `INSERT INTO BOOKINGS VALUES(${booking.id},'${formatDate()}','${
+    let query = `INSERT INTO BOOKINGS (
+    id,
+    createdAt,
+    startDate,
+    endDate,
+    numNights,
+    totalPrice,
+    status,
+    isPaid,
+    cabinId,
+    guestId,
+    paymentMethod,
+    description ) VALUES(${booking.id},'${formatDate()}','${
       booking.startDate
-    }','${booking.endDate}',${booking.numNights},${booking.numGuests},${
-      booking.cabinPrice
-    },${booking.extrasPrice},${booking.totalPrice},'${booking.status}','${
-      booking.observation ? booking.observation : ''
-    }',${booking.cabinId},${booking.guestId},${
-      booking.hasBreakFast
-    },NULL,NULL,${booking.dealId ? booking.dealId : 'NULL'},${
-      booking.hasSmoking
-    })`;
+    }','${booking.endDate}',${booking.numNights},${booking.totalPrice},'${
+      booking.status
+    }' ,'${booking.isPaid}' ,${booking.cabinId},${booking.guestId} ,'${
+      booking.paymentMethod
+    }' ,'${booking?.description ?? ' '}')`;
     mySqlConnection.query(query, (error, rows) => {
       try {
         if (error) throw error;
@@ -146,6 +154,15 @@ export class BookingRepo {
 
       let query = `SELECT * FROM BOOKINGS WHERE startDate >= "${date}"`;
 
+      const bookings = await fetchModel<IBooking[]>(query);
+      return bookings;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async getBookingDatesByGuestId(guestId: number) {
+    try {
+      let query = `SELECT id, startDate , endDate FROM BOOKINGS WHERE guestId = ${guestId}`;
       const bookings = await fetchModel<IBooking[]>(query);
       return bookings;
     } catch (error) {

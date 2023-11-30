@@ -53,6 +53,8 @@ export interface IBooking {
   guestId: number;
   dealId: number;
   hasSmoking: number;
+  paymentMethod?: string;
+  description?: string;
 }
 export interface IUpdateBooking {
   createdAt?: Date;

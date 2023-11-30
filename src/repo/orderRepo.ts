@@ -1,4 +1,4 @@
-import { addModel } from './genericRepo';
+import { addModel, fetchModel } from './genericRepo';
 import { IOrder } from '../Interface/interface';
 import { formatDate } from '../utils/date';
 export class OrderRepo {
@@ -20,6 +20,16 @@ export class OrderRepo {
         );
       });
       await Promise.all([promise1, ...promises]);
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async fetchOrders(bookingId: number) {
+    try {
+      const orders = await fetchModel<IOrder[]>(
+        `select * from orders where bookingId = ${bookingId}`
+      );
+      return orders;
     } catch (error) {
       throw error;
     }

@@ -32,6 +32,7 @@ export class itemController {
   static async getAllItems(req: Request, resp: Response) {
     try {
       const items = await itemRepo.getAllItems(req.query);
+      console.log('items ', items);
       const count = await itemRepo.getCount();
       resp.status(200).json({
         status: 'sucess',

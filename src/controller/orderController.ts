@@ -22,4 +22,33 @@ export class OrderController {
       });
     }
   }
+  // implement fetch orders by guest id
+  static async fetchOrders(req: Request, resp: Response) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        resp.status(400).json({
+          status: 'fail',
+          message: 'Please provide an id',
+        });
+      }
+      const orders = await OrderRepo.fetchOrders(+id);
+      if (!orders) {
+        resp.status(404).json({
+          status: 'fail',
+          message: 'No orders found',
+        });
+      }
+      resp.status(200).json({
+        status: 'success',
+        count: orders.length,
+        orders,
+      });
+    } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
 }

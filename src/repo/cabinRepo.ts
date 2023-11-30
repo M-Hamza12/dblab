@@ -20,9 +20,9 @@ export class CabinRepo {
   static async addCabin(cabin: ICabin, res: Response) {
     try {
       console.log('calling');
-      const query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage,isAnimalFriendly)
+      const query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage)
                 VALUES(${cabin.id},'${cabin.createdAt}','${cabin.name}'
-                      ,${cabin.maxCapacity},${cabin.regularPrice},${cabin.discount},'${cabin.description}','${cabin.cabinImage}','${cabin.isAnimalFriendly}'}')`;
+                      ,${cabin.maxCapacity},${cabin.regularPrice},${cabin.discount},'${cabin.description}','${cabin.cabinImage}')`;
       const res = await addModel(query);
       const { features } = cabin;
       if (features && features?.length > 0) {
@@ -82,13 +82,13 @@ export class CabinRepo {
         console.log(filterString);
       }
       const cabins = (await fetchModel(
-        `SELECT c.id ,c.name,c.maxCapacity,c.regularPrice,c.discount,c.description,c.cabinImage,c.totalBookings,c.isAnimalFriendly,
+        `SELECT c.id ,c.name,c.maxCapacity,c.regularPrice,c.discount,c.description,c.cabinImage,c.totalBookings,
           GROUP_CONCAT(f.featureName SEPARATOR ',') AS features
         FROM Cabins c
         JOIN CabinFeatures cf ON c.id = cf.cabinID
         JOIN features f ON cf.featureID = f.id
         ${filterString}
-        GROUP BY c.id ,c.name,c.maxCapacity,c.regularPrice,c.discount,c.description,c.cabinImage,c.totalBookings,c.isAnimalFriendly` +
+        GROUP BY c.id ,c.name,c.maxCapacity,c.regularPrice,c.discount,c.description,c.cabinImage,c.totalBookings` +
           Query.paramQuery(param)
       )) as IReadCabin[];
       return cabins?.map(

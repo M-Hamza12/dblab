@@ -27,11 +27,7 @@ export class BookingController {
 
       // check if cabin is available
       // console.log(cabin.regularPrice);
-      booking.cabinPrice = cabin.regularPrice;
       //if there is breakfast
-      booking.extrasPrice = booking.hasBreakFast ? 100 : 0;
-
-      booking.totalPrice = booking.cabinPrice + booking.extrasPrice;
       console.log('booking : ', booking);
       //checking if there are no conflicts wihin dates
       // YYYY-MM-DD
@@ -109,7 +105,7 @@ export class BookingController {
   }
   static async getBookingById(req: Request, resp: Response) {
     try {
-      const booking = await BookingRepo.getBookingById(+req.params.id);
+      const booking = await BookingRepo.getFormatBookingById(+req.params.id);
       resp.status(200).json({
         status: 'success',
         booking,

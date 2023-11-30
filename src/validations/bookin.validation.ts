@@ -16,20 +16,12 @@ export const validateBooking = [
     .withMessage('numNights is required')
     .isInt({ gt: 0 })
     .withMessage('nights should be atleast 1'),
-  body('numGuests')
-    .notEmpty()
-    .withMessage('numNights is required')
-    .isInt({ gt: 0 })
-    .withMessage('numNights should be greater than 0'),
+
   // body('cabinPrice').isInt({ gt: 0 }),
   // body('extrasPrice').isNumeric().withMessage('enter numeric value'),
   // body('totalPrice').isNumeric().withMessage('enter numeric value'),
   body('status').notEmpty(),
-  body('hasBreakFast')
-    .notEmpty()
-    .withMessage('hasBreakfast is required')
-    .isBoolean()
-    .withMessage('hasBreakfast is  boolean value'),
+
   body('isPaid').isBoolean().withMessage('isPaid is boolean value'),
   // body('observation').isBoolean().withMessage('enter boolean value'),
   body('cabinId')
@@ -37,16 +29,13 @@ export const validateBooking = [
     .withMessage('cabinId is required')
     .isNumeric()
     .withMessage('cabinId is numeric value'),
+  body('description').notEmpty().withMessage('description is required'),
   body('guestId')
     .notEmpty()
     .withMessage('guestId is required')
     .isNumeric()
     .withMessage('guestId numeric value'),
-  body('hasSmoking')
-    .notEmpty()
-    .withMessage('hasSmoking is required')
-    .isBoolean()
-    .withMessage('hasSmoking is boolean value'),
+
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

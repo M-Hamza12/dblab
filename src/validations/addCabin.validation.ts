@@ -21,10 +21,7 @@ export const validateCabin = [
     .withMessage('Regular price must be a number'),
   body('description').notEmpty().withMessage('Description is required'),
   body('cabinImage').notEmpty().withMessage('Cabin images are required'),
-  body('animalFriendly')
-    .optional()
-    .isBoolean()
-    .withMessage('Animal friendly must be a boolean'),
+
   body('features')
     .notEmpty()
     .withMessage('features are required')

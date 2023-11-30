@@ -41,18 +41,13 @@ export interface IBooking {
   startDate: Date;
   endDate: Date;
   numNights: number;
-  numGuests: number;
-  cabinPrice: number;
-  extrasPrice: number;
   totalPrice: number;
   status: string;
-  hasBreakFast: boolean;
   isPaid: boolean;
-  observation: boolean;
+  description: string;
   cabinId: number;
   guestId: number;
-  dealId: number;
-  hasSmoking: number;
+  paymentMethod: string;
 }
 export interface IUpdateBooking {
   createdAt?: Date;
@@ -159,5 +154,14 @@ export interface IOrder {
     itemId: number;
     price: number;
     quantity: number;
+  }[];
+}
+export interface IFormatBooking {
+  bookings: IBooking;
+  guest: IGuest;
+  cabin: ICabin;
+  orders: {
+    order: IOrder;
+    items: Iitem[];
   }[];
 }

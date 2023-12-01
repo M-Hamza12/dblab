@@ -46,11 +46,7 @@ export class BookingController {
 
       // check if cabin is available
       // console.log(cabin.regularPrice);
-      booking.cabinPrice = cabin.regularPrice;
       //if there is breakfast
-      booking.extrasPrice = booking.hasBreakFast ? 100 : 0;
-
-      booking.totalPrice = booking.cabinPrice + booking.extrasPrice;
       console.log('booking : ', booking);
       //checking if there are no conflicts wihin dates
       // YYYY-MM-DD
@@ -128,11 +124,8 @@ export class BookingController {
   }
   static async getBookingById(req: Request, resp: Response) {
     try {
-      const booking = await BookingRepo.getBookingById(+req.params.id);
-      // always use return when you are sending reponse otherwise it will throw error
-      // if some other code tries to send response
-      // [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
-      return resp.status(200).json({
+      const booking = await BookingRepo.getFormatBookingById(+req.params.id);
+      resp.status(200).json({
         status: 'success',
         booking,
       });

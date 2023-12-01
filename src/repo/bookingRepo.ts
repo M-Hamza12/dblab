@@ -1,5 +1,12 @@
 import { mySqlConnection } from '..';
-import { IBooking } from '../Interface/interface';
+import {
+  IBooking,
+  IFormatBooking,
+  ICabin,
+  IOrder,
+  Iitem,
+  IGuest,
+} from '../Interface/interface';
 import { Response } from 'express';
 import { CabinRepo } from './cabinRepo';
 import { GuestRepo } from './guestRepo';
@@ -8,27 +15,22 @@ import { IParamQuery } from '../Interface/interface';
 import { fetchModel, deleteModel, updateModel } from './genericRepo';
 import { Query } from '../utils/query';
 export class BookingRepo {
-  static addBooking(booking: IBooking, resp: Response) {
+  static async addBooking(booking: IBooking, resp: Response) {
     console.log(booking);
-    let query = `INSERT INTO BOOKINGS (
-    id,
-    createdAt,
-    startDate,
-    endDate,
-    numNights,
-    totalPrice,
-    status,
-    isPaid,
-    cabinId,
-    guestId,
-    paymentMethod,
-    description ) VALUES(${booking.id},'${formatDate()}','${
+    const regularPrice = await fetchModel<{ regularPrice: number }[]>(
+      'Select regularPrice from cabins where id = ' + booking.cabinId
+    );
+    booking.totalPrice = regularPrice[0].regularPrice;
+    console.log(booking.totalPrice);
+    let query = `INSERT INTO BOOKINGS VALUES(${booking.id},'${formatDate()}','${
       booking.startDate
     }','${booking.endDate}',${booking.numNights},${booking.totalPrice},'${
       booking.status
-    }' ,'${booking.isPaid}' ,${booking.cabinId},${booking.guestId} ,'${
-      booking.paymentMethod
-    }' ,'${booking?.description ?? ' '}')`;
+    }',NULL,NULL,${booking.isPaid},'${booking.description}',${
+      booking.cabinId
+    },${booking.guestId},'${
+      booking.paymentMethod ? booking.paymentMethod : 'cash'
+    }')`;
     mySqlConnection.query(query, (error, rows) => {
       try {
         if (error) throw error;
@@ -105,6 +107,49 @@ export class BookingRepo {
       throw error;
     }
   }
+
+  static async getFormatBookingById(
+    bookingId: number
+  ): Promise<IFormatBooking | null> {
+    try {
+      const booking = await fetchModel<IBooking[]>(
+        'SELECT * FROM BOOKINGS WHERE ID = ' + bookingId
+      );
+      if (!booking) throw new Error('No such booking');
+      const cabin = fetchModel<ICabin[]>(
+        'Select * from cabins where id = ' + booking[0].cabinId
+      );
+      const guest = fetchModel<IGuest[]>(
+        'Select * from guests where id = ' + booking[0].guestId
+      );
+      const order = fetchModel<IOrder[]>(
+        'Select * from orders where bookingId = ' + booking[0].id
+      );
+      const result = await Promise.all([cabin, guest, order]);
+      const items = result[2].map((o) => {
+        return fetchModel<Iitem[]>(
+          'Select items.* from items inner join orderItems oi on oi.itemId = items.itemId where orderId = ' +
+            o.id
+        );
+      });
+      const orderItem = await Promise.all(items);
+      const orders = orderItem.map((oi, index) => {
+        return {
+          order: result[2][index],
+          items: [...oi],
+        };
+      });
+      return {
+        bookings: booking[0],
+        orders,
+        cabin: result[0][0],
+        guest: result[1][0],
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async getBookingByCabinId(
     cabinId: number
   ): Promise<IBooking[] | null> {

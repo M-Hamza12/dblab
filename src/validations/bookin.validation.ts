@@ -28,6 +28,7 @@ export const validateBooking = [
     .withMessage('cabinId is required')
     .isNumeric()
     .withMessage('cabinId is numeric value'),
+  body('description').notEmpty().withMessage('description is required'),
   body('guestId')
     .notEmpty()
     .withMessage('guestId is required')

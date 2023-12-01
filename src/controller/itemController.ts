@@ -2,6 +2,7 @@ import { Iitem } from '../Interface/interface';
 import { itemRepo } from '../repo/itemRepo';
 import { Request, Response } from 'express';
 import generateUniqueId from 'generate-unique-id';
+
 export class itemController {
   static async addItem(req: Request, resp: Response) {
     try {
@@ -31,6 +32,7 @@ export class itemController {
   static async getAllItems(req: Request, resp: Response) {
     try {
       const items = await itemRepo.getAllItems(req.query);
+      console.log('items ', items);
       const count = await itemRepo.getCount();
       resp.status(200).json({
         status: 'sucess',

@@ -7,6 +7,7 @@ import {
 import generateUniqueId from 'generate-unique-id';
 import { formatDate } from '../utils/date';
 import { CabinRepo } from '../repo/cabinRepo';
+
 export class CabinController {
   static addCabin(req: Request, resp: Response) {
     try {
@@ -36,12 +37,13 @@ export class CabinController {
   static async findAllCabins(req: Request, res: Response) {
     console.log('req.query ', req.query);
     console.log('------------------------', Date.now());
-    const cabins = await CabinRepo.findAllCabins(
-      req.query as IParamQuery,
-      req.body.filters
-    );
+    console.log('req. body ', req.body);
+    const filters = JSON.parse((req?.query?.filters as string) ?? '{}');
+    const { filters: _, ...query } = req.query;
+    console.log('filters ', filters);
+    const cabins = await CabinRepo.findAllCabins(query as IParamQuery, filters);
+    console.log(' cabins ', cabins);
     const totalCount = await CabinRepo.getCabinsCount();
-    // console.log('cabins ', cabins);
     return res.status(200).json({
       count: totalCount,
       cabins,

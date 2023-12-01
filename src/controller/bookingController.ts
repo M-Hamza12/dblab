@@ -4,6 +4,25 @@ import { BookingRepo } from '../repo/bookingRepo';
 import { BookingService } from '../services/bookingService';
 import generateUniqueId from 'generate-unique-id';
 
+interface BookingDate {
+  startDate: string;
+  endDate: string;
+  id: number;
+}
+const getBookingIdIfToday = (dates: BookingDate[]) => {
+  const today = new Date();
+
+  for (const { id, startDate, endDate } of dates) {
+    const sDate = new Date(startDate);
+    const eDate = new Date(endDate);
+
+    // Check if today is between start date and end date (inclusive)
+    if (today >= sDate && today <= eDate) {
+      return id;
+    }
+  }
+  return null;
+};
 export class BookingController {
   static async addBooking(req: Request, resp: Response) {
     try {
@@ -56,7 +75,7 @@ export class BookingController {
   static async getBookingsByGuestId(req: Request, resp: Response) {
     try {
       const bookings = await BookingRepo.getBookingByGuestId(+req.params.id);
-      console.log(bookings);
+      // console.log(bookings);
       resp.status(200).json({
         status: 'success',
         bookings,
@@ -73,7 +92,7 @@ export class BookingController {
       const bookings = await BookingRepo.getBookingsByCabinId(
         +req.params.cabinId
       );
-      console.log(bookings);
+      // console.log(bookings);
       resp.status(200).json({
         status: 'success',
         bookings,
@@ -111,7 +130,7 @@ export class BookingController {
         booking,
       });
     } catch (error) {
-      resp.status(400).json({
+      return resp.status(400).json({
         status: 'fail',
         error,
       });
@@ -135,6 +154,8 @@ export class BookingController {
     try {
       const id = +req.params.id;
       const data = req.body as IUpdateBooking;
+      console.log('_body ', req.body);
+
       //If you are altering the date or maybe booking other cabin than hv to check dates
       if (data.startDate && data.endDate && data.cabinId) {
         if (
@@ -146,7 +167,6 @@ export class BookingController {
           ))
         )
           throw new Error('Confilicting dates for the given cabin and date');
-        data.extrasPrice = data.hasBreakFast ? 100 : 0;
 
         // data.totalPrice = data.cabinPrice + data.extrasPrice
         await BookingRepo.updateBooking(id, req.body);
@@ -164,6 +184,7 @@ export class BookingController {
       } else
         throw new Error('Provide both start and end date along with cabinId');
     } catch (error) {
+      console.log('error', error);
       resp.status(400).json({
         status: 'fail',
         error: error instanceof Error ? error.message : 'something went wrong',
@@ -196,6 +217,72 @@ export class BookingController {
         bookings,
       });
     } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
+  static async getBookingDatesByGuestId(req: Request, resp: Response) {
+    try {
+      const { id } = req.params;
+      console.log('guestId ', id);
+      if (!id) {
+        return resp.status(400).json({
+          status: 'fail',
+          error: {
+            message: 'Please provide guest id',
+          },
+        });
+      }
+      const dates = await BookingRepo.getBookingDatesByGuestId(+id);
+      return resp.status(200).json({
+        status: 'success',
+        dates,
+      });
+    } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
+  static async hasBookingStartedToday(req: Request, resp: Response) {
+    try {
+      const { id } = req.params;
+      console.log('id ', id);
+      if (!id) {
+        return resp.status(400).json({
+          status: 'fail',
+          error: {
+            message: 'Please provide guest id',
+          },
+        });
+      }
+      const dates = await BookingRepo.getBookingDatesByGuestId(+id);
+      if (!dates.length)
+        return resp.status(200).json({
+          status: 'success',
+          isBookingToday: false,
+        });
+      const isBookingToday = getBookingIdIfToday(
+        dates as unknown as BookingDate[]
+      );
+      if (!isBookingToday) {
+        return resp.status(200).json({
+          status: 'success',
+          isBookingToday: false,
+          booking: null,
+        });
+      }
+      const booking = await BookingRepo.getBookingById(isBookingToday);
+      return resp.status(200).json({
+        status: 'success',
+        isBookingToday: true,
+        booking,
+      });
+    } catch (error) {
+      console.log('error today ', error);
       resp.status(400).json({
         status: 'fail',
         error,

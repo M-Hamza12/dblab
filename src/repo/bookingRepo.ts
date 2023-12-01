@@ -176,7 +176,7 @@ export class BookingRepo {
       throw error;
     }
   }
-  static async updateBooking(bookingId: number, data: any) {
+  static async updateBooking(bookingId: number, data: Partial<IBooking>) {
     try {
       const query = Query.updateById(bookingId, 'bookings', data);
 
@@ -199,6 +199,15 @@ export class BookingRepo {
 
       let query = `SELECT * FROM BOOKINGS WHERE startDate >= "${date}"`;
 
+      const bookings = await fetchModel<IBooking[]>(query);
+      return bookings;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async getBookingDatesByGuestId(guestId: number) {
+    try {
+      let query = `SELECT id, startDate , endDate FROM BOOKINGS WHERE guestId = ${guestId}`;
       const bookings = await fetchModel<IBooking[]>(query);
       return bookings;
     } catch (error) {

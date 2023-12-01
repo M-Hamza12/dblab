@@ -21,7 +21,6 @@ export const validateBooking = [
   // body('extrasPrice').isNumeric().withMessage('enter numeric value'),
   // body('totalPrice').isNumeric().withMessage('enter numeric value'),
   body('status').notEmpty(),
-
   body('isPaid').isBoolean().withMessage('isPaid is boolean value'),
   // body('observation').isBoolean().withMessage('enter boolean value'),
   body('cabinId')
@@ -35,7 +34,6 @@ export const validateBooking = [
     .withMessage('guestId is required')
     .isNumeric()
     .withMessage('guestId numeric value'),
-
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

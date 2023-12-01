@@ -60,14 +60,17 @@ export class CabinRepo {
           filterString += `(c.regularPrice>= ${filters.priceRange.min} and c.regularPrice <= ${filters.priceRange.max})`;
         }
         if (filters.maxCapacity) {
+          console.log('inside max cap');
           if (filterString !== ' where ') filterString += ' and (';
           filters.maxCapacity.forEach((m, i) => {
             if (i > 0) filterString += ' or ';
             filterString += `c.maxCapacity = ${m}`;
           });
-          filterString += ') ';
+          if (filters.priceRange) filterString += ')';
+          else filterString += ' ';
+          console.log('filter string from max cap', filterString);
         }
-        if (filters.features) {
+        if (filters?.features) {
           if (filterString !== ' where ') filterString += ' and ';
           filterString += ` c.id in (
     	select c2.id

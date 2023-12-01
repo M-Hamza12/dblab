@@ -42,6 +42,7 @@ app.use('/api/v1/cabin', cabinRouter);
 app.use('/api/v1/guest', guestRouter);
 app.use('/api/v1/booking', bookingRouter);
 app.use('/api/v1/deals', dealRouter);
+
 app.use('/api/v1/item', itemRouter);
 app.use('/api/v1/feature', feaureRouter);
 app.use('/api/v1/order', orderRouter);

@@ -1,39 +1,58 @@
-// import { Request, Response } from 'express';
-// import { IBooking } from '../Interface/interface';
-// import { addBooking, fetchCabin, fetchGuest } from '../repo/adminRepo';
-// import { refactorErrorMessage } from '../utils/error';
-// import { validationResult } from 'express-validator';
+import { Request, Response } from 'express';
+import { adminRepo } from '../repo/adminRepo';
+import { Iadmin } from '../Interface/interface';
+import { hashPassword } from '../services/authServices';
+import { createSendToken, correctPassword } from '../services/authServices';
+import generateUniqueId from 'generate-unique-id';
 
-// export const Booking = async (req: Request, resp: Response) => {
-//   try {
-//     const booking = req.body as IBooking;
+export class adminController {
+  static async addAdmin(req: Request, resp: Response) {
+    try {
+      const admin = req.body as Iadmin;
+      admin.id = +generateUniqueId({
+        useLetters: false,
+        useNumbers: true,
+        length: 10,
+      });
+      // authentication
+      if (admin.password !== admin.confirmPassword)
+        throw new Error('password does not match');
 
-//     const result = validationResult(req);
-//     if (!result.isEmpty()) {
-//       const error = refactorErrorMessage(result);
-//       return resp.status(400).json({
-//         status: 'fail',
-//         error,
-//       });
-//     }
+      const encrptedPassword: string = await hashPassword(admin.password);
 
-//     //fetching cabin and guest from the db
-//     const guest = await fetchGuest(booking.guestId);
-//     const cabin = await fetchCabin(booking.cabinId);
+      admin.password = encrptedPassword;
 
-//     //if guest is not in db
-//     if (!guest) throw new Error('Guest is not found.Please register your self');
-//     //if it is an invalid cabin
-//     if (!cabin) throw new Error('Invalid Cabin');
+      await adminRepo.addAdmin(admin);
+      resp.status(201).json({
+        status: 'success',
+      });
+    } catch (error) {
+      resp.status(404).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
 
-//     //if all is good
-//     addBooking(booking, resp);
-//   } catch (error) {
-//     console.log('error');
-//     let message: string = '';
-//     if (error instanceof Error) message = error.message;
-//     resp.status(404).json({
-//       message,
-//     });
-//   }
-// };
+  static async adminLogin(req: Request, resp: Response) {
+    try {
+      console.log('in here');
+      const { email, password } = req.body as {
+        email: string;
+        password: string;
+      };
+      //fetching admin
+      const admin = await adminRepo.fetchAdminByEmail(email);
+      if (!admin || !(await correctPassword(password, admin.password))) {
+        throw new Error('invalid email or password');
+      }
+      //sending token
+      createSendToken(admin, 200, resp);
+    } catch (error) {
+      resp.status(404).json({
+        status: 'fail',
+        message: 'email or password is invalid',
+      });
+    }
+  }
+}

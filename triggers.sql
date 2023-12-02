@@ -12,6 +12,10 @@ BEGIN
     update Cabins
     set totalBookings = counter + 1
     where Cabins.id = NEW.cabinId;
+    
+    update guests
+    set totalBooking = totalBooking + 1
+    where guests.id = New.guestId;
 END; //
 
 DELIMITER ;

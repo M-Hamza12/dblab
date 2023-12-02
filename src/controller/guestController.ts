@@ -5,7 +5,6 @@ import { GuestRepo } from '../repo/guestRepo';
 import generateUniqueId from 'generate-unique-id';
 
 export class GuestController {
-
   static async addGuest(req: Request, resp: Response) {
     try {
       const guest = req.body as IGuest;
@@ -33,7 +32,7 @@ export class GuestController {
   }
   static async getAllGuests(req: Request, resp: Response) {
     try {
-      const guests = await GuestRepo.getAllGuest();
+      const guests = await GuestRepo.getAllGuest(req.query);
       resp.status(200).json({
         status: 'success',
         result: guests.length,

@@ -104,7 +104,6 @@ export class CabinRepo {
             discount: cabin.discount,
             description: cabin.description,
             cabinImage: cabin.cabinImage,
-            isAnimalFriendly: cabin.isAnimalFriendly,
             totalBookings: cabin.totalBookings,
             features: cabin.features?.split(','),
           } as ICabin)

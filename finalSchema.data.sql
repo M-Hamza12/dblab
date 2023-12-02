@@ -8,6 +8,7 @@ CREATE OR REPLACE TABLE GUESTS(
     profilePicture varchar(1000),
     password varchar(1000) not null ,
     role varchar(100) default 'guest',
+    totalBookings int default 0,
     constraint guests_pkey primary key(id)
     
 );
@@ -135,3 +136,14 @@ insert into orderitems values(1,5,2);
 insert into orderitems values(1,4,2);
 insert into orderitems values(3,4,2);
 insert into orderitems values(2,5,2);
+
+create table admin(
+    id bigint primary key,
+	name varchar(1000),
+    email varchar(100),
+    password varchar(1000),
+    role varchar(1000)
+);
+alter table admin add constraint admin_email_un UNIQUE(email);
+insert into admin(id,name,email,password,role,token) values(1,'admin','admin@gmail.com','test1234',NULL,'admin');
+

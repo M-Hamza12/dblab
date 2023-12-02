@@ -76,8 +76,7 @@ export interface ICabin {
   description: string;
   cabinImage: string;
   totalBookings: number;
-  features?: string[];
-  isAnimalFriendly: boolean;
+  features?: number[];
 }
 
 export interface IFilters {
@@ -126,7 +125,8 @@ export interface IParamQuery {
   sort?: string;
   pageSize?: string;
   pageNumber?: string;
-  sortBy?: 'asc' | 'desc';
+  sortBy?: string;
+  totalBooking?: 'true' | 'false';
   status?: 'checked-in' | 'checked-out' | 'unconfirmed';
 }
 export interface IFood {
@@ -164,4 +164,13 @@ export interface IFormatBooking {
     order: IOrder;
     items: Iitem[];
   }[];
+}
+
+export interface Iadmin {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  token?: string;
 }

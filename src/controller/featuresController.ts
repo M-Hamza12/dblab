@@ -36,4 +36,18 @@ export class FeaturesController {
       });
     }
   }
+  static async updateFeature(req: Request, resp: Response) {
+    try {
+      const id: number = +req.params.id;
+      await featuresRepo.updateFeature(id, req.body.featureName as string);
+      resp.status(200).json({
+        status: 'sucess',
+      });
+    } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
 }

@@ -73,6 +73,7 @@ export class BookingRepo {
   }
   static async getAllBookings(param: IParamQuery): Promise<IBooking[] | null> {
     try {
+      if (!param.sortBy) param.sortBy = 'createdAt-desc';
       const status: string = param.status
         ? ` where status = '${param.status}'`
         : '';
@@ -84,6 +85,24 @@ export class BookingRepo {
       )) as IBooking[];
 
       return bookings;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async getFilteredCount(param: IParamQuery) {
+    try {
+      const status: string = param.status
+        ? ` where status = '${param.status}'`
+        : '';
+      const count = await fetchModel<
+        {
+          count: number;
+        }[]
+      >(`SELECT Count(*) as 'count' FROM Bookings
+         inner join cabins on cabins.id = bookings.cabinId
+          inner join guests on guests.id = bookings.guestId
+          ${status} `);
+      return count[0].count;
     } catch (error) {
       throw error;
     }

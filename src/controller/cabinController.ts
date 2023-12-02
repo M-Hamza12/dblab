@@ -22,7 +22,6 @@ export class CabinController {
       });
       //YYYY-MM-DD
       cabin.createdAt = formatDate();
-
       const res = CabinRepo.addCabin(cabin, resp);
       resp.status(201).json({
         status: 'success',

@@ -12,7 +12,7 @@ export class OrderRepo {
       const promise1 = addModel(
         `insert into orders values(${order.id},${totalPrice},${
           order.bookingId
-        },${formatDate()})`
+        },'${formatDate()}')`
       );
       const promises = order.items.map((item) => {
         return addModel(

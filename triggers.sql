@@ -32,4 +32,15 @@ BEGIN
     where bookings.id = New.bookingId;
 END; //
 
+DELIMITER //
+
+CREATE OR REPLACE TRIGGER payment
+AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+   	update bookings
+    set bookings.isPaid = false
+    where bookings.id = New.bookingId;
+END; //
+
 DELIMITER ;

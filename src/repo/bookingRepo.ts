@@ -17,10 +17,10 @@ import { Query } from '../utils/query';
 export class BookingRepo {
   static async addBooking(booking: IBooking, resp: Response) {
     console.log(booking);
-    const regularPrice = await fetchModel<{ regularPrice: number }[]>(
-      'Select regularPrice from cabins where id = ' + booking.cabinId
-    );
-    booking.totalPrice = regularPrice[0].regularPrice;
+    // const regularPrice = await fetchModel<{ regularPrice: number }[]>(
+    //   'Select regularPrice from cabins where id = ' + booking.cabinId
+    // );
+    // booking.totalPrice = regularPrice[0].regularPrice;
     console.log(booking.totalPrice);
     let query = `INSERT INTO BOOKINGS VALUES(${booking.id},'${formatDate()}','${
       booking.startDate
@@ -78,7 +78,7 @@ export class BookingRepo {
         ? ` where status = '${param.status}'`
         : '';
       const bookings = (await fetchModel(
-        `SELECT bookings.* , cabins.name as 'cabinName' , guests.fullName as 'guestName',guests.email FROM Bookings
+        `SELECT bookings.* , cabins.name as 'cabinName',cabins.regularPrice as 'cabinPrice' , guests.fullName as 'guestName',guests.email FROM Bookings
          inner join cabins on cabins.id = bookings.cabinId
           inner join guests on guests.id = bookings.guestId
           ${status} ` + Query.paramQuery(param)

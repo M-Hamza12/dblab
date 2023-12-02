@@ -38,6 +38,7 @@ export class CabinRepo {
       throw error;
     }
   }
+
   // todo add total bookings on cabin
   static async findAllCabins(
     param: IParamQuery,
@@ -129,7 +130,7 @@ export class CabinRepo {
   static async updateCabin(cabinId: number, data: any, resp: Response) {
     try {
       const query = Query.updateById(cabinId, 'cabins', data);
-
+      console.log('update cabin query ', query);
       await updateModel(query);
     } catch (error) {
       throw error;

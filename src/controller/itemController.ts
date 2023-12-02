@@ -79,6 +79,10 @@ export class itemController {
     try {
       const id = +req.params.id;
       await itemRepo.updateItem(id, req.body);
+      return resp.status(204).json({
+        status: 'success',
+        data: {},
+      });
     } catch (error) {
       resp.status(403).json({
         status: 'fail',

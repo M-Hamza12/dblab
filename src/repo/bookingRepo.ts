@@ -242,6 +242,18 @@ export class BookingRepo {
       throw error;
     }
   }
+  static async getRecentBookings(days: number): Promise<IBooking[]> {
+    try {
+      let date = formatDate(new Date(Date.now() - days * 24 * 60 * 60 * 1000));
+
+      let query = `SELECT * FROM BOOKINGS WHERE createdAt >= "${date}"`;
+
+      const bookings = await fetchModel<IBooking[]>(query);
+      return bookings;
+    } catch (error) {
+      throw error;
+    }
+  }
   static async getBookingDatesByGuestId(guestId: number) {
     try {
       let query = `SELECT id, startDate , endDate FROM BOOKINGS WHERE guestId = ${guestId}`;

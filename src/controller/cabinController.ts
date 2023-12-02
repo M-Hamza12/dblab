@@ -83,6 +83,27 @@ export class CabinController {
       });
     }
   }
+  static async findCabinById(req: Request, resp: Response) {
+    try {
+      const id = +req.params.id;
+      console.log('hehe');
+      const cabin = await CabinRepo.fetchCabin(id);
+      if (!cabin)
+        return resp.status(404).json({
+          status: 'fail',
+          error: 'cabin not found',
+        });
+      return resp.status(200).json({
+        status: 'success',
+        cabin,
+      });
+    } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
   static async getFutureBookings(req: Request, resp: Response) {
     const id = +req.params.id;
     console.log('future id : ', id);

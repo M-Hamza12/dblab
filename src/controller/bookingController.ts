@@ -208,6 +208,22 @@ export class BookingController {
       });
     }
   }
+  static async getRecentBookings(req: Request, resp: Response) {
+    try {
+      const days = +req.params.days;
+      const bookings = await BookingRepo.getRecentBookings(days);
+      resp.status(200).json({
+        status: 'success',
+        result: bookings.length,
+        bookings,
+      });
+    } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
   static async getTodayActivity(req: Request, resp: Response) {
     try {
       console.log('hit activity');

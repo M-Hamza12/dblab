@@ -20,6 +20,7 @@ router
 router.route('/today/:id').get(BookingController.hasBookingStartedToday);
 router.route('/:id').patch(BookingController.updateBooking);
 router.route('/pastbookings/:days').get(BookingController.pastDaysBooking);
+router.route('/recentbookings/:days').get(BookingController.getRecentBookings);
 router
   .route('/cabin/:cabinId/bookedDates')
   .get(BookingController.getBookingsByCabinId);

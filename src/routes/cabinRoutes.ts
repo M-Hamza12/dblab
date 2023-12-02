@@ -16,6 +16,7 @@ const router = express.Router();
 // / with post means create where as / with get means find all
 router.route('/').post(validateCabin, CabinController.addCabin);
 router.route('/').get(middleware, CabinController.findAllCabins);
+router.route('/:id').get(CabinController.findCabinById);
 router.route('/:id').patch(validateUpdateCabin, CabinController.updateCabin);
 router.route('/:id').delete(CabinController.deleteCabin);
 router.route('/get-future-booking/:id').get(CabinController.getFutureBookings);

@@ -1,4 +1,4 @@
-import { addModel, fetchModel } from './genericRepo';
+import { addModel, fetchModel, updateModel } from './genericRepo';
 import { Query } from '../utils/query';
 import { Response } from 'express';
 
@@ -21,6 +21,15 @@ export class featuresRepo {
     try {
       const features = await fetchModel('SELECT * FROM features');
       return features;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async updateFeature(featureId: number, featureName: string) {
+    try {
+      await updateModel(
+        `Update features set featureName = '${featureName}' where id = ${featureId}`
+      );
     } catch (error) {
       throw error;
     }

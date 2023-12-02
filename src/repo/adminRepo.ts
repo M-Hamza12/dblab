@@ -1,41 +1,40 @@
-// import { Response } from 'express';
-// import { IGuest, ICabin, IBooking } from '../Interface/interface';
-// import { mySqlConnection } from '..';
-// import { fetchModel } from './genericRepo';
-
-// export const fetchGuest = async (guestId: number): Promise<IGuest | null> => {
-//   try {
-//     const guest = await fetchModel<IGuest>(
-//       'SELECT * FROM GUEST WHERE id=' + guestId
-//     );
-//     return guest;
-//   } catch (error) {
-//     return null;
-//   }
-// };
-
-// export const fetchCabin = async (cabinId: number): Promise<ICabin | null> => {
-//   try {
-//     const cabin = await fetchModel<ICabin>(
-//       'SELECT * FROM Cabin WHERE id=' + cabinId
-//     );
-//     return cabin;
-//   } catch (error) {
-//     return null;
-//   }
-// };
-
-// export const addBooking = (booking: IBooking, resp: Response) => {
-//   mySqlConnection.query('INSERT INTO BOOKING() VALUES()', (error, rows) => {
-//     try {
-//       if (error) throw error;
-//       resp.status(201).json({
-//         status: 'success',
-//       });
-//     } catch (error) {
-//       resp.status(404).json({
-//         status: 'fail',
-//       });
-//     }
-//   });
-// };
+import { Iadmin } from '../Interface/interface';
+import { addModel, fetchModel, updateModel } from './genericRepo';
+export class adminRepo {
+  static async addAdmin(admin: Iadmin) {
+    try {
+      await addModel(
+        `insert into admin(id,name,email,password,role) values(${admin.id},'${admin.name}','${admin.email}','${admin.password}','admin')`
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async fetchAdminById(id: number) {
+    try {
+      const admin = await fetchModel<Iadmin[]>(
+        'Select * from admin where id = ' + id
+      );
+      return admin[0];
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async fetchAdminByEmail(email: string) {
+    try {
+      const admin = await fetchModel<Iadmin[]>(
+        `Select * from admin where email =  '${email}'`
+      );
+      return admin[0];
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async loggedIn(id: number, token: string) {
+    try {
+      await updateModel(`update admin set token = ${token} where id = ${id}`);
+    } catch (error) {
+      throw error;
+    }
+  }
+}

@@ -1,22 +1,29 @@
 import { mySqlConnection } from '..';
 import { Query } from '../utils/query';
-import { IGuest, IUpdateGuest } from '../Interface/interface';
+import { IGuest, IParamQuery, IUpdateGuest } from '../Interface/interface';
 import { Response } from 'express';
 import { deleteModel, fetchModel, updateModel, addModel } from './genericRepo';
 
 export class GuestRepo {
   static async addGuest(guest: IGuest): Promise<string> {
-    const query = `INSERT INTO GUESTS(id,createdAt,fullName,nationalId,countryFlag)
-                 VALUES(${guest.id},'${guest.createdAt}','${guest.fullName}','${guest.nationalId}','${guest.countryFlag}')`;
+    const query = `INSERT INTO GUESTS(id,createdAt,fullName,nationalId,countryFlag,totalBooking)
+                 VALUES(${guest.id},'${guest.createdAt}','${guest.fullName}','${guest.nationalId}','${guest.countryFlag}',0)`;
     try {
       return await addModel(query);
     } catch (error) {
       throw error;
     }
   }
-  static async getAllGuest(): Promise<IGuest[]> {
+  static async getAllGuest(param: IParamQuery): Promise<IGuest[]> {
     try {
-      let query = 'SELECT * FROM GUESTS';
+      if (!param.sortBy) param.sortBy = 'createdAt-desc';
+      let where = '';
+      if (param.totalBooking) {
+        if (param.totalBooking === 'true') where += ' where totalBooking > 0 ';
+        else where += ' where totalBooking = 0 ';
+      }
+
+      let query = 'SELECT * FROM GUESTS ' + where + Query.paramQuery(param);
       return await fetchModel(query);
     } catch (error) {
       throw error;

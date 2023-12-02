@@ -43,10 +43,12 @@ export class Query {
         queryString.sortBy.split('-')[1]
       } `;
     }
-    const pageNo = queryString.pageNumber ? +queryString.pageNumber : 1;
-    const limit = queryString.pageSize ? +queryString.pageSize : 30;
-    const offset = (pageNo - 1) * limit;
-    query += `LIMIT ${offset} , ${limit}`;
+    if (queryString.pageSize && queryString.pageSize) {
+      const pageNo = queryString.pageNumber ? +queryString.pageNumber : 1;
+      const limit = queryString.pageSize ? +queryString.pageSize : 30;
+      const offset = (pageNo - 1) * limit;
+      query += `LIMIT ${offset} , ${limit}`;
+    }
     console.log('query ', query);
     return query;
   }

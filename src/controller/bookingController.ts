@@ -107,8 +107,8 @@ export class BookingController {
   static async getAllBookings(req: Request, resp: Response) {
     try {
       const allBookings = await BookingRepo.getAllBookings(req.query);
-      const totalCount = await BookingRepo.totalBookings();
-
+      const totalCount = await BookingRepo.getFilteredCount(req.query);
+      console.log('totalcout ', totalCount);
       if (!allBookings) throw new Error('no booking');
       resp.status(200).json({
         status: 'success',

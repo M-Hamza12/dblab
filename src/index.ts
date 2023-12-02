@@ -58,6 +58,7 @@ export const mySqlConnection = mysql.createConnection({
 mySqlConnection.connect((error) => {
   if (error) {
     console.log('error connecting to db ' + JSON.stringify(error));
+    throw new Error('error connecting to db ' + JSON.stringify(error));
   } else {
     console.log('connected to db successfully');
   }

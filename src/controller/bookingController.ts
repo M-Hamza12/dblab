@@ -125,6 +125,7 @@ export class BookingController {
   static async getBookingById(req: Request, resp: Response) {
     try {
       const booking = await BookingRepo.getFormatBookingById(+req.params.id);
+      console.log('booking by id ', booking);
       resp.status(200).json({
         status: 'success',
         booking,

@@ -43,6 +43,7 @@ export interface IBooking {
   numNights: number;
   totalPrice: number;
   status: string;
+  numGuests?: number;
   isPaid: boolean;
   description: string;
   cabinId: number;
@@ -152,16 +153,13 @@ export interface IOrder {
   bookingId: number;
   items: {
     itemId: number;
+    name?: string;
     price: number;
     quantity: number;
   }[];
 }
-export interface IFormatBooking {
-  bookings: IBooking;
+export type IFormatBooking = IBooking & {
   guest: IGuest;
   cabin: ICabin;
-  orders: {
-    order: IOrder;
-    items: Iitem[];
-  }[];
-}
+  orders: IOrder[];
+};

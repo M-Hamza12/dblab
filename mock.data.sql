@@ -62,7 +62,7 @@ CREATE TABLE GUESTS(
 ALTER TABLE Guests
 ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'guest',
 ADD COLUMN password VARCHAR(255) NOT NULL DEFAULT '12345678';
-
+-- token varchar(1000) not null
 CREATE TABLE CABINS(
     id bigint,
     createdAt date not null,

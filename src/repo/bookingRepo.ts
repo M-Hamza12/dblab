@@ -22,15 +22,26 @@ export class BookingRepo {
     );
     booking.totalPrice = regularPrice[0].regularPrice;
     console.log(booking.totalPrice);
-    let query = `INSERT INTO BOOKINGS VALUES(${booking.id},'${formatDate()}','${
-      booking.startDate
-    }','${booking.endDate}',${booking.numNights},${booking.totalPrice},'${
-      booking.status
-    }',NULL,NULL,${booking.isPaid},'${booking.description}',${
-      booking.cabinId
-    },${booking.guestId},'${
-      booking.paymentMethod ? booking.paymentMethod : 'cash'
-    }')`;
+
+    let query = `INSERT INTO BOOKINGS (
+      id, createdAt, startDate, endDate, numNights, totalPrice, status, 
+      isPaid, description, cabinId, guestId, paymentMethod, numGuests
+    ) VALUES (
+      ${booking.id},
+      '${formatDate()}',
+      '${booking.startDate}',
+      '${booking.endDate}',
+      ${booking.numNights},
+      ${booking.totalPrice},
+      '${booking.status}',
+      ${booking.isPaid},
+      '${booking.description}',
+      ${booking.cabinId},
+      ${booking.guestId},
+      '${booking.paymentMethod ? booking.paymentMethod : 'cash'}',
+      ${booking?.numGuests ?? 1} 
+    )`;
+
     mySqlConnection.query(query, (error, rows) => {
       try {
         if (error) throw error;
@@ -45,6 +56,7 @@ export class BookingRepo {
       }
     });
   }
+
   static async getBookingsByCabinId(cabinId: number) {
     try {
       const bookings = await fetchModel<IBooking[]>(
@@ -76,13 +88,19 @@ export class BookingRepo {
       const status: string = param.status
         ? ` where status = '${param.status}'`
         : '';
+      // its not working !bug
+      // const bookings = (await fetchModel(
+      //   `SELECT bookings.* , cabins.name as 'cabinName' , guests.fullName as 'guestName',guests.email FROM Bookings
+      //    inner join cabins on cabins.id = bookings.cabinId
+      //     inner join guests on guests.id = bookings.guestId
+      //     ${status} ` + Query.paramQuery(param)
+      // )) as IBooking[];
       const bookings = (await fetchModel(
         `SELECT bookings.* , cabins.name as 'cabinName' , guests.fullName as 'guestName',guests.email FROM Bookings
          inner join cabins on cabins.id = bookings.cabinId
           inner join guests on guests.id = bookings.guestId
-          ${status} ` + Query.paramQuery(param)
+           `
       )) as IBooking[];
-
       return bookings;
     } catch (error) {
       throw error;
@@ -135,13 +153,13 @@ export class BookingRepo {
       const orderItem = await Promise.all(items);
       const orders = orderItem.map((oi, index) => {
         return {
-          order: result[2][index],
+          ...result[2][index],
           items: [...oi],
         };
       });
       return {
-        bookings: booking[0],
-        orders,
+        ...booking[0],
+        orders: orders as unknown as IOrder[],
         cabin: result[0][0],
         guest: result[1][0],
       };

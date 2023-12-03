@@ -73,4 +73,11 @@ export class GuestRepo {
       throw error;
     }
   }
+  static async getGuestCount(): Promise<number> {
+    const guests = await fetchModel<{ count: number }[]>(
+      "SELECT count(*) as 'count' FROM guests"
+    );
+    console.log(guests);
+    return guests[0].count;
+  }
 }

@@ -20,12 +20,21 @@ export class GuestRepo {
       if (!param.sortBy) param.sortBy = 'createdAt-desc';
       let where = '';
       if (param.totalBooking) {
-        if (param.totalBooking === 'true') where += ' where totalBooking > 0 ';
-        else where += ' where totalBooking = 0 ';
+        if (param.totalBooking === 'true')
+          where += ' where g.totalBooking > 0 ';
+        else where += '  where g.totalBooking = 0 ';
       }
-
-      let query = 'SELECT * FROM GUESTS ' + where + Query.paramQuery(param);
-      return await fetchModel(query);
+      const guests = await fetchModel(
+        `select g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking,IFNULL(sum(b.totalPrice),0) as 'totalSpending' from guests g 
+        left outer join bookings b on b.guestId = g.id ` +
+          where +
+          ` group by g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking  ` +
+          Query.paramQuery(param)
+      );
+      return guests as IGuest[];
+      // let query = 'SELECT * FROM GUESTS ' + where + Query.paramQuery(param);
+      // console.log('guest query ', query);
+      // return await fetchModel(query);
     } catch (error) {
       throw error;
     }

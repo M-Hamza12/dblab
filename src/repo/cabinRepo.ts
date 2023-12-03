@@ -149,18 +149,26 @@ export class CabinRepo {
       const cabin = await fetchModel<ICabin[]>(
         'Select * from bookings where cabinId = ' + cabinId
       );
-      if (cabin.length === 0) {
-        //no booking hardDelete
-        let query = Query.deleteById(cabinId, 'CABINS');
-        await deleteModel(query);
-        console.log('hard delete');
-      } else {
-        //there are some booking so soft delete
-        await updateModel(
-          'Update cabins set deleted = true where id = ' + cabinId
-        );
-        console.log('soft delete');
-      }
+      // if (!cabin) {
+      //   return resp.status(400).json({
+      //     status: 'fail',
+      //     error: {
+      //       message: 'cabin not found',
+      //     },
+      //   });
+      // }
+      // if (cabin?.length === 0) {
+      //   //no booking hardDelete
+      //   let query = Query.deleteById(cabinId, 'CABINS');
+      //   await deleteModel(query);
+      //   console.log('hard delete');
+      // } else {
+      //there are some booking so soft delete
+      await updateModel(
+        'Update cabins set deleted = true where id = ' + cabinId
+      );
+      console.log('soft delete');
+      // }
     } catch (error) {
       throw error;
     }

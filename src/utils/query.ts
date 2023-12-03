@@ -49,7 +49,9 @@ export class Query {
       const offset = (pageNo - 1) * limit;
       query += `LIMIT ${offset} , ${limit}`;
     }
-    console.log('query ', query);
+    // if (!!queryString) query += ' and where deleted = false or deleted = 0';
+    // else query += ' where deleted = false or deleted = 0';
+    console.log('query items', query);
     return query;
   }
 }

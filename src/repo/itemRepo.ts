@@ -10,7 +10,8 @@ export class itemRepo {
     try {
       console.log('items ', param);
       return (await fetchModel(
-        'SELECT * FROM ITEMS ' + Query.paramQuery(param)
+        'SELECT * FROM ITEMS where deleted = 0 or deleted = false ' +
+          Query.paramQuery(param)
       )) as Iitem[];
     } catch (error) {
       throw error;
@@ -19,7 +20,9 @@ export class itemRepo {
   static async getCount() {
     try {
       return (
-        await fetchModel<Iitem[]>('Select * from items where deleted = false')
+        await fetchModel<Iitem[]>(
+          'Select * from items where deleted = false or deleted = 0'
+        )
       ).length;
     } catch (error) {
       throw error;

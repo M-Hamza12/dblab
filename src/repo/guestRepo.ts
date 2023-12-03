@@ -3,6 +3,7 @@ import { Query } from '../utils/query';
 import { IGuest, IParamQuery, IUpdateGuest } from '../Interface/interface';
 import { Response } from 'express';
 import { deleteModel, fetchModel, updateModel, addModel } from './genericRepo';
+import { param } from 'express-validator';
 
 export class GuestRepo {
   static async addGuest(guest: IGuest): Promise<string> {
@@ -58,13 +59,15 @@ export class GuestRepo {
       throw error;
     }
   }
-  static async fetchAllGuestWithSpending() {
+  static async fetchAllGuestWithSpending(param: IParamQuery) {
     try {
-      const guests =
-        await fetchModel(`select g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking,IFNULL(sum(b.totalPrice),0) as 'totalSpending' from guests g 
+      if (!param.sortBy) param.sortBy = 'createdAt-desc';
+      const guests = await fetchModel(
+        `select g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking,IFNULL(sum(b.totalPrice),0) as 'totalSpending' from guests g 
         left outer join bookings b on b.guestId = g.id
-        group by g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking ;
-`);
+        group by g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking  ` +
+          Query.paramQuery(param)
+      );
       return guests;
     } catch (error) {
       throw error;

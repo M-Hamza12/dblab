@@ -92,7 +92,7 @@ export class GuestController {
   }
   static async fetchAllGuestWithSpending(req: Request, resp: Response) {
     try {
-      const guests = await GuestRepo.fetchAllGuestWithSpending();
+      const guests = await GuestRepo.fetchAllGuestWithSpending(req.query);
       resp.status(200).json({
         status: 'success',
         guests,

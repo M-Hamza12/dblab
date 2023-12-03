@@ -43,6 +43,7 @@ export class CabinController {
     const cabins = await CabinRepo.findAllCabins(query as IParamQuery, filters);
     console.log(' cabins ', cabins);
     const totalCount = await CabinRepo.getCabinsCount();
+
     return res.status(200).json({
       count: totalCount,
       cabins,

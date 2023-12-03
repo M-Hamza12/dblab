@@ -99,7 +99,7 @@ export class BookingRepo {
       const bookings = (await fetchModel(
         `SELECT bookings.* , cabins.name as 'cabinName',cabins.regularPrice as 'cabinPrice' , guests.fullName as 'guestName',guests.email FROM Bookings
          inner join cabins on cabins.id = bookings.cabinId
-          inner join guests on guests.id = bookings.guestId
+          inner join guests on guests.id = bookings.guestId ${status}
            `
       )) as IBooking[];
       return bookings;

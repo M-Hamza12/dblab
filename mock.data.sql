@@ -123,6 +123,7 @@ create table items(
     name varchar(100),
     constraint table_PK primary key(itemId)
 );
+Alter table items add column deleted Boolean default false;
 INSERT INTO items (itemId, name, price, picture) VALUES
 (4, 'Oatmeal Bar', 20, 'oatmeal_bar_picture.jpg'),
 (5, 'Pancakes', 20, 'pancakes_picture.jpg'),

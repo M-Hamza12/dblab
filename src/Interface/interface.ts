@@ -97,6 +97,7 @@ export interface IReadCabin {
   cabinImage: string;
   totalBookings: number;
   features?: string;
+  deleted: boolean;
   isAnimalFriendly: boolean;
 }
 

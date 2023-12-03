@@ -18,7 +18,9 @@ export class itemRepo {
   }
   static async getCount() {
     try {
-      return (await fetchModel<Iitem[]>('Select * from items')).length;
+      return (
+        await fetchModel<Iitem[]>('Select * from items where deleted = false')
+      ).length;
     } catch (error) {
       throw error;
     }
@@ -50,7 +52,20 @@ export class itemRepo {
   }
   static async deleteItem(itemId: number) {
     try {
-      await deleteModel('Delete from items where itemId = ' + itemId);
+      const items = await fetchModel<Iitem[]>(
+        'select * from orderItems where itemId = ' + itemId
+      );
+      if (items.length === 0) {
+        //no order for this item so hard delete
+        await deleteModel('Delete from items where itemId = ' + itemId);
+        console.log('hard delete');
+      } else {
+        //there are some orders related to this hence soft delete
+        await updateModel(
+          'Update items set deleted = true where itemId = ' + itemId
+        );
+        console.log('soft delete');
+      }
     } catch (error) {
       throw error;
     }

@@ -83,8 +83,13 @@ export class CabinRepo {
         having count(f.id) >= ${filters.features.length}
     )`;
         }
-        console.log(filterString);
       }
+      filterString =
+        filterString.length === 0
+          ? ' where deleted = false '
+          : ' and deleted = false ';
+      console.log('FILTER STRING : ', filterString);
+
       const cabins = (await fetchModel(
         `SELECT c.id ,c.name,c.maxCapacity,c.regularPrice,c.discount,c.description,c.cabinImage,c.totalBookings,
           GROUP_CONCAT(f.featureName SEPARATOR ',') AS features
@@ -95,7 +100,8 @@ export class CabinRepo {
         GROUP BY c.id ,c.name,c.maxCapacity,c.regularPrice,c.discount,c.description,c.cabinImage,c.totalBookings` +
           Query.paramQuery(param)
       )) as IReadCabin[];
-      return cabins?.map(
+      const filteredCabin = cabins?.filter((cabin) => !cabin.deleted);
+      return filteredCabin?.map(
         (cabin) =>
           ({
             id: cabin.id,
@@ -114,7 +120,9 @@ export class CabinRepo {
     }
   }
   static async getCabinsCount(): Promise<number> {
-    const cabins = await fetchModel<ICabin[]>('SELECT * FROM CABINS');
+    const cabins = await fetchModel<ICabin[]>(
+      'SELECT * FROM CABINS where deleted = false'
+    );
     return cabins.length;
   }
   static async fetchCabin(cabinId: number): Promise<ICabin | null> {
@@ -138,8 +146,21 @@ export class CabinRepo {
   }
   static async deleteCabin(cabinId: number, resp: Response) {
     try {
-      let query = Query.deleteById(cabinId, 'CABINS');
-      await deleteModel(query);
+      const cabin = await fetchModel<ICabin[]>(
+        'Select * from bookings where cabinId = ' + cabinId
+      );
+      if (cabin.length === 0) {
+        //no booking hardDelete
+        let query = Query.deleteById(cabinId, 'CABINS');
+        await deleteModel(query);
+        console.log('hard delete');
+      } else {
+        //there are some booking so soft delete
+        await updateModel(
+          'Update cabins set deleted = true where id = ' + cabinId
+        );
+        console.log('soft delete');
+      }
     } catch (error) {
       throw error;
     }

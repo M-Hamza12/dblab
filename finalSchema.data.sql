@@ -30,6 +30,7 @@ CREATE OR Replace TABLE CABINS(
     totalBookings int default 0,
     constraint cabins_pkey primary key(id)
 );
+Alter table cabins add column deleted Boolean default false;
 insert into cabins values(34,'2001-09-11','madagacascar',23,211000,1020,'abca','abc',0);
 insert into cabins values(35,'2001-09-11','sdfdf',23,211000,1020,'abca','abc',0);
 insert into cabins values(36,'2001-09-11','anker',23,211000,1020,'abca','abc',0);
@@ -49,11 +50,15 @@ insert into features(featureName) values('waterbed');
 CREATE TABLE CabinFeatures (
     cabinID bigint(20),
     featureID int,
-    FOREIGN KEY (cabinID) REFERENCES Cabins(id),
-    FOREIGN KEY (featureID) REFERENCES features(id),
+    FOREIGN KEY (cabinID) REFERENCES Cabins(id) ON DELETE CASCADE,
+    FOREIGN KEY (featureID) REFERENCES features(id) ON DELETE CASCADE,
     PRIMARY KEY (cabinID, featureID)
 );
-
+ALTER TABLE cabinFeatures 
+  ADD CONSTRAINT fk_name 
+  FOREIGN KEY (cabinId) 
+  REFERENCES Cabins(id) 
+  ON DELETE CASCADE;
 
 insert into cabinFeatures values(34,1);
 insert into cabinFeatures values(35,1);
@@ -91,7 +96,7 @@ create table items(
     name varchar(100),
     constraint table_PK primary key(itemId)
 );
-
+Alter table items add column deleted Boolean default false;
 INSERT INTO items (itemId, name, price, picture) VALUES
 (4, 'Oatmeal Bar', 20, 'oatmeal_bar_picture.jpg'),
 (5, 'Pancakes', 20, 'pancakes_picture.jpg'),

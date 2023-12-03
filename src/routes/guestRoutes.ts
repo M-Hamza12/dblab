@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.route('/').post(validateAddGuest, GuestController.addGuest);
 router.route('/').get(GuestController.getAllGuests);
+router.route('/spending').get(GuestController.fetchAllGuestWithSpending);
 
 router.route('/:id').get(GuestController.getGuestById);
 router.route('/:id').patch(validateUpdateGuest, GuestController.updateGuest);

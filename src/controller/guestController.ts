@@ -90,4 +90,18 @@ export class GuestController {
       });
     }
   }
+  static async fetchAllGuestWithSpending(req: Request, resp: Response) {
+    try {
+      const guests = await GuestRepo.fetchAllGuestWithSpending();
+      resp.status(200).json({
+        status: 'success',
+        guests,
+      });
+    } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
 }

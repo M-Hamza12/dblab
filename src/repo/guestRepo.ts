@@ -58,4 +58,16 @@ export class GuestRepo {
       throw error;
     }
   }
+  static async fetchAllGuestWithSpending() {
+    try {
+      const guests =
+        await fetchModel(`select g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking,sum(b.totalPrice) as 'totalSpending' from guests g 
+        inner join bookings b on b.guestId = g.id
+        group by g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking ;
+`);
+      return guests;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -61,8 +61,8 @@ export class GuestRepo {
   static async fetchAllGuestWithSpending() {
     try {
       const guests =
-        await fetchModel(`select g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking,sum(b.totalPrice) as 'totalSpending' from guests g 
-        inner join bookings b on b.guestId = g.id
+        await fetchModel(`select g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking,IFNULL(sum(b.totalPrice),0) as 'totalSpending' from guests g 
+        left outer join bookings b on b.guestId = g.id
         group by g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking ;
 `);
       return guests;

@@ -104,9 +104,10 @@ export class BookingRepo {
     try {
       console.log('getting bookings');
       if (!param.sortBy) param.sortBy = 'createdAt-desc';
-      const status: string = param.status
-        ? ` where status = '${param.status}'`
-        : '';
+      const status: string =
+        param.status && param.status !== 'all'
+          ? ` where status = '${param.status}'`
+          : '';
       // its not working !bug
       // const bookings = (await fetchModel(
       //   `SELECT bookings.* , cabins.name as 'cabinName' , guests.fullName as 'guestName',guests.email FROM Bookings

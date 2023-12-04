@@ -71,10 +71,18 @@ export class GuestRepo {
   static async fetchAllGuestWithSpending(param: IParamQuery) {
     try {
       if (!param.sortBy) param.sortBy = 'createdAt-desc';
+      let where = '';
+      if (param.totalBooking) {
+        if (param.totalBooking === 'true')
+          where += ' where g.totalBooking > 0 ';
+        if (param.totalBooking === 'false')
+          where += '  where g.totalBooking = 0 ';
+      }
       const guests = await fetchModel(
         `select g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking,IFNULL(sum(b.totalPrice),0) as 'totalSpending' from guests g 
         left outer join bookings b on b.guestId = g.id
-        group by g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking  ` +
+        ${where}
+        group by g.id,g.fullName,g.createdAt,g.email,g.countryFlag,g.nationalId,g.ProfilePicture,g.role,g.totalBooking ` +
           Query.paramQuery(param)
       );
       return guests;

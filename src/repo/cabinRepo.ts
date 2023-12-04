@@ -19,7 +19,6 @@ import { Query } from '../utils/query';
 export class CabinRepo {
   static async addCabin(cabin: ICabin, res: Response) {
     try {
-      console.log('calling');
       const query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage)
                 VALUES(${cabin.id},'${cabin.createdAt}','${cabin.name}'
                       ,${cabin.maxCapacity},${cabin.regularPrice},${cabin.discount},'${cabin.description}','${cabin.cabinImage}')`;
@@ -46,7 +45,6 @@ export class CabinRepo {
   ): Promise<ICabin[] | null> {
     try {
       let filterString = '';
-      console.log(filters);
 
       if (filters && Object.keys(filters).length > 0) {
         filterString = ' where ';
@@ -84,7 +82,7 @@ export class CabinRepo {
     )`;
         }
       }
-      filterString =
+      filterString +=
         filterString.length === 0
           ? ' where deleted = false '
           : ' and deleted = false ';
@@ -138,7 +136,6 @@ export class CabinRepo {
   static async updateCabin(cabinId: number, data: any, resp: Response) {
     try {
       const query = Query.updateById(cabinId, 'cabins', data);
-      console.log('update cabin query ', query);
       await updateModel(query);
     } catch (error) {
       throw error;

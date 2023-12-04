@@ -34,14 +34,9 @@ export class CabinController {
     }
   }
   static async findAllCabins(req: Request, res: Response) {
-    console.log('req.query ', req.query);
-    console.log('------------------------', Date.now());
-    console.log('req. body ', req.body);
     const filters = JSON.parse((req?.query?.filters as string) ?? '{}');
     const { filters: _, ...query } = req.query;
-    console.log('filters ', filters);
     const cabins = await CabinRepo.findAllCabins(query as IParamQuery, filters);
-    console.log(' cabins ', cabins);
     const totalCount = await CabinRepo.getCabinsCount();
 
     return res.status(200).json({

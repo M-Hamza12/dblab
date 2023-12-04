@@ -152,15 +152,16 @@ export class BookingRepo {
       const booking = await fetchModel<IBooking[]>(
         'SELECT * FROM BOOKINGS WHERE ID = ' + bookingId
       );
-      if (!booking) throw new Error('No such booking');
+      console.log('bk ', booking);
+      if (booking && booking?.length <= 0) throw new Error('No such booking');
       const cabin = fetchModel<ICabin[]>(
-        'Select * from cabins where id = ' + booking[0].cabinId
+        'Select * from cabins where id = ' + booking[0]?.cabinId
       );
       const guest = fetchModel<IGuest[]>(
-        'Select * from guests where id = ' + booking[0].guestId
+        'Select * from guests where id = ' + booking[0]?.guestId
       );
       const order = fetchModel<IOrder[]>(
-        'Select * from orders where bookingId = ' + booking[0].id
+        'Select * from orders where bookingId = ' + booking[0]?.id
       );
       const result = await Promise.all([cabin, guest, order]);
       const items = result[2].map((o) => {
@@ -183,6 +184,7 @@ export class BookingRepo {
         guest: result[1][0],
       };
     } catch (error) {
+      console.log('errrrrrrrrrrrrrrrr ', error);
       throw error;
     }
   }
@@ -204,8 +206,11 @@ export class BookingRepo {
     guestId: number
   ): Promise<IBooking[] | null> {
     try {
+      // SELECT * , c.name from bookings b inner join cabins c on  b.cabinId = c.id WHERE b.guestId = 12;
       const booking = await fetchModel<IBooking[]>(
-        'SELECT * FROM BOOKINGS WHERE guestId = ' + guestId
+        'SELECT b.* , c.name as cabinName from bookings b inner join cabins c on  b.cabinId = c.id WHERE c.deleted = false and  b.guestId = ' +
+          guestId
+        // 'SELECT * FROM BOOKINGS WHERE guestId = ' + guestId
       );
       if (!booking) throw new Error('No such booking');
       return booking;
@@ -216,7 +221,8 @@ export class BookingRepo {
   static async updateBooking(bookingId: number, data: Partial<IBooking>) {
     try {
       const query = Query.updateById(bookingId, 'bookings', data);
-
+      console.log('update query data', query);
+      console.log('update query data', data);
       await updateModel(query);
     } catch (error) {
       throw error;

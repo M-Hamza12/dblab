@@ -4,5 +4,6 @@ const router = express.Router();
 
 router.route('/').post(OrderController.addOrder);
 router.route('/:id').get(OrderController.fetchOrders);
+router.route('/guest/:id').get(OrderController.fetchOrdersByGuestId);
 
 export default router;

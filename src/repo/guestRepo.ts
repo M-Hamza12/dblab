@@ -82,9 +82,14 @@ export class GuestRepo {
       throw error;
     }
   }
-  static async getGuestCount(): Promise<number> {
+  static async getGuestCount(param: IParamQuery): Promise<number> {
+    let where = '';
+    if (param.totalBooking) {
+      if (param.totalBooking === 'true') where += ' where totalBooking > 0 ';
+      else where += '  where totalBooking = 0 ';
+    }
     const guests = await fetchModel<{ count: number }[]>(
-      "SELECT count(*) as 'count' FROM guests"
+      "SELECT count(*) as 'count' FROM guests " + where
     );
     console.log(guests);
     return guests[0].count;

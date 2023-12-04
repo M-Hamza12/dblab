@@ -51,4 +51,27 @@ export class OrderController {
       });
     }
   }
+  static async fetchOrdersByGuestId(req: Request, resp: Response) {
+    try {
+      console.log('called101');
+      const { id } = req.params;
+      if (!id) {
+        resp.status(400).json({
+          status: 'fail',
+          message: 'Please provide an id',
+        });
+      }
+      const orders = await OrderRepo.fetchOrdersByGuestId(+id);
+      resp.status(200).json({
+        status: 'success',
+        count: orders.length,
+        orders,
+      });
+    } catch (error) {
+      resp.status(400).json({
+        status: 'fail',
+        error,
+      });
+    }
+  }
 }

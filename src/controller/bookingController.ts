@@ -131,6 +131,7 @@ export class BookingController {
         booking,
       });
     } catch (error) {
+      console.log('error ', error);
       return resp.status(400).json({
         status: 'fail',
         error,
@@ -160,6 +161,7 @@ export class BookingController {
       //If you are altering the date or maybe booking other cabin than hv to check dates
       if (data.startDate && data.endDate && data.cabinId) {
         if (
+          // you should check all booking dates except for the current booking
           !(await BookingService.isValidUpdateDate(
             data.startDate,
             data.endDate,
@@ -175,11 +177,9 @@ export class BookingController {
           status: 'success',
         });
       } else if (!data.startDate && !data.endDate && !data.cabinId) {
-        data.extrasPrice = data.hasBreakFast ? 100 : 0;
-
         // data.totalPrice = data.cabinPrice + data.extrasPrice
         await BookingRepo.updateBooking(id, req.body);
-        resp.status(200).json({
+        return resp.status(200).json({
           status: 'success',
         });
       } else

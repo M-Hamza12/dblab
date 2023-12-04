@@ -43,6 +43,8 @@ export class BookingService {
       if (!bookings) return true;
       if (bookings.length === 0) return true;
       for (const b of bookings) {
+        console.log('booking b  , ', b);
+        console.log('booking id , ', bookingId);
         if (b.id === bookingId) continue;
         if (
           new Date(startDate) >= b.startDate &&

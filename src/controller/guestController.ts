@@ -33,9 +33,10 @@ export class GuestController {
   static async getAllGuests(req: Request, resp: Response) {
     try {
       const guests = await GuestRepo.getAllGuest(req.query);
+      const count = await GuestRepo.getGuestCount(req.query);
       resp.status(200).json({
         status: 'success',
-        result: guests.length,
+        result: count,
         guests,
       });
     } catch (error) {
@@ -93,7 +94,7 @@ export class GuestController {
   static async fetchAllGuestWithSpending(req: Request, resp: Response) {
     try {
       const guests = await GuestRepo.fetchAllGuestWithSpending(req.query);
-      const count = await GuestRepo.getGuestCount();
+      const count = await GuestRepo.getGuestCount(req.query);
       resp.status(200).json({
         status: 'success',
         count,

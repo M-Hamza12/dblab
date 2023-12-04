@@ -34,4 +34,18 @@ export class OrderRepo {
       throw error;
     }
   }
+  static async fetchOrdersByGuestId(guestId: number) {
+    try {
+      const orders = await fetchModel<IOrder[]>(
+        `SELECT o.*, g.fullName AS guestName
+        FROM orders o
+        INNER JOIN bookings b ON o.bookingId = b.id
+        INNER JOIN guests g ON b.guestId = g.id
+        WHERE g.id = ${guestId}`
+      );
+      return orders;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

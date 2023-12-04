@@ -56,3 +56,29 @@ export function getFutureBookingProcedure(
     );
   });
 }
+
+export function beginTransaction(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    mySqlConnection.beginTransaction((err) => {
+      if (err) reject(err);
+      resolve('Transaction started');
+    });
+  });
+}
+export function commit(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    mySqlConnection.commit((err) => {
+      if (err) reject(err);
+      resolve('Transaction commited');
+    });
+  });
+}
+
+export function rollback(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    mySqlConnection.rollback((err) => {
+      if (err) reject(err);
+      resolve('Rollback!');
+    });
+  });
+}

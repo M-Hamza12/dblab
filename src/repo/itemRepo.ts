@@ -1,5 +1,13 @@
 import { IParamQuery, Iitem } from '../Interface/interface';
-import { fetchModel, addModel, updateModel, deleteModel } from './genericRepo';
+import {
+  fetchModel,
+  addModel,
+  updateModel,
+  deleteModel,
+  beginTransaction,
+  commit,
+  rollback,
+} from './genericRepo';
 import { Query } from '../utils/query';
 import { param } from 'express-validator';
 
@@ -39,10 +47,14 @@ export class itemRepo {
   }
   static async addItem(item: Iitem) {
     try {
+      console.log('adding item ', item);
+      await beginTransaction(); //beginTransaction
       await addModel(
-        `Insert into items values(${item.id},${item.price},'${item.picture}','${item.name}')`
+        `Insert into items values(${item.id},${item.price},'${item.picture}','${item.name}',false)`
       );
+      await commit(); // COMMIT
     } catch (error) {
+      await rollback(); //ROllback
       throw error;
     }
   }

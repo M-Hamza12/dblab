@@ -29,7 +29,7 @@ export class AuthRepo {
     } catch (error) {
       resp.status(400).json({
         status: 'fail',
-        error: error,
+        message: 'email is already in use or something went wrong',
       });
     }
   }

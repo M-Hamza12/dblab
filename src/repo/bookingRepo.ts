@@ -12,8 +12,17 @@ import { CabinRepo } from './cabinRepo';
 import { GuestRepo } from './guestRepo';
 import { formatDate } from '../utils/date';
 import { IParamQuery } from '../Interface/interface';
-import { fetchModel, deleteModel, updateModel } from './genericRepo';
+import {
+  fetchModel,
+  deleteModel,
+  updateModel,
+  addModel,
+  beginTransaction,
+  commit,
+  rollback,
+} from './genericRepo';
 import { Query } from '../utils/query';
+
 export class BookingRepo {
   static async addBooking(booking: IBooking, resp: Response) {
     console.log(booking);
@@ -23,7 +32,8 @@ export class BookingRepo {
     // booking.totalPrice = regularPrice[0].regularPrice;
     console.log(booking.totalPrice);
 
-    let query = `INSERT INTO BOOKINGS (
+    let query = `
+    INSERT INTO BOOKINGS (
       id, createdAt, startDate, endDate, numNights, totalPrice, status, 
       isPaid, description, cabinId, guestId, paymentMethod, numGuests
     ) VALUES (
@@ -41,20 +51,27 @@ export class BookingRepo {
       '${booking.paymentMethod ? booking.paymentMethod : 'cash'}',
       ${booking?.numGuests ?? 1} 
     )`;
-
-    mySqlConnection.query(query, (error, rows) => {
-      try {
-        if (error) throw error;
-        resp.status(201).json({
-          status: 'success',
-        });
-      } catch (error) {
-        resp.status(404).json({
-          status: 'fail',
-          error,
-        });
-      }
-    });
+    try {
+      await beginTransaction(); //Start Transaction
+      await addModel(query);
+      await commit(); //COMMIT Transaction
+    } catch (error) {
+      await rollback(); //ROLLBACK
+      throw error;
+    }
+    // mySqlConnection.query(query, (error, rows) => {
+    //   try {
+    //     if (error) throw error;
+    //     resp.status(201).json({
+    //       status: 'success',
+    //     });
+    //   } catch (error) {
+    //     resp.status(404).json({
+    //       status: 'fail',
+    //       error,
+    //     });
+    //   }
+    // });
   }
 
   static async getBookingsByCabinId(cabinId: number) {
@@ -85,6 +102,7 @@ export class BookingRepo {
   }
   static async getAllBookings(param: IParamQuery): Promise<IBooking[] | null> {
     try {
+      console.log('getting bookings');
       if (!param.sortBy) param.sortBy = 'createdAt-desc';
       const status: string = param.status
         ? ` where status = '${param.status}'`
@@ -99,8 +117,8 @@ export class BookingRepo {
       const bookings = (await fetchModel(
         `SELECT bookings.* , cabins.name as 'cabinName',cabins.regularPrice as 'cabinPrice' , guests.fullName as 'guestName',guests.email FROM Bookings
          inner join cabins on cabins.id = bookings.cabinId
-          inner join guests on guests.id = bookings.guestId ${status}
-           `
+          inner join guests on guests.id = bookings.guestId ${status} ` +
+          Query.paramQuery(param)
       )) as IBooking[];
       return bookings;
     } catch (error) {

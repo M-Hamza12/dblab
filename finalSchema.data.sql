@@ -87,6 +87,8 @@ CREATE OR REPLACE TABLE Bookings (
   FOREIGN KEY (cabinId) REFERENCES CABINS(id),
   FOREIGN KEY (guestId) REFERENCES Guests(id)
 );
+--for my schema I added numGuests
+alter table bookings add numGuests int;
 INSERT INTO Bookings VALUES (1, NOW(),'2023-11-26', '2023-11-28', 2,  100.00, 'Confirmed',NUll,NUll,False, 'abcd', 34,12,'cash');
 INSERT INTO Bookings VALUES (2, NOW(),'2024-11-26', '2024-11-28', 2,  100.00, 'Confirmed',NUll,NUll,False, 'abcd', 34,12,'cash');
 create table items(
@@ -96,6 +98,9 @@ create table items(
     name varchar(100),
     constraint table_PK primary key(itemId)
 );
+-- URL LENGTH IS Larger than 100 so i increased it to 1000
+ALTER TABLE items    
+MODIFY picture varchar(1000); 
 Alter table items add column deleted Boolean default false;
 INSERT INTO items (itemId, name, price, picture) VALUES
 (4, 'Oatmeal Bar', 20, 'oatmeal_bar_picture.jpg'),

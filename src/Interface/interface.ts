@@ -129,7 +129,7 @@ export interface IParamQuery {
   pageNumber?: string;
   sortBy?: string;
   totalBooking?: 'true' | 'false';
-  status?: 'checked-in' | 'checked-out' | 'unconfirmed';
+  status?: 'checked-in' | 'checked-out' | 'unconfirmed' | 'all';
 }
 export interface IFood {
   id: number;

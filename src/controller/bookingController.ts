@@ -62,7 +62,10 @@ export class BookingController {
           message: 'There is already bookings within same date',
         });
       //if all is good
-      BookingRepo.addBooking(booking, resp);
+      await BookingRepo.addBooking(booking, resp);
+      resp.status(201).json({
+        status: 'success',
+      });
     } catch (error) {
       console.log('error');
       let message: string = '';

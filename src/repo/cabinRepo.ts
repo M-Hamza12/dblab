@@ -12,6 +12,9 @@ import {
   deleteModel,
   addModel,
   getFutureBookingProcedure,
+  beginTransaction,
+  commit,
+  rollback,
 } from '../repo/genericRepo';
 import { Response } from 'express';
 import { Query } from '../utils/query';
@@ -19,6 +22,7 @@ import { Query } from '../utils/query';
 export class CabinRepo {
   static async addCabin(cabin: ICabin, res: Response) {
     try {
+      console.log('adding cabin');
       const query = `INSERT INTO CABINS(id,createdAt,name,maxCapacity,regularPrice,discount,description,cabinImage)
                 VALUES(${cabin.id},'${cabin.createdAt}','${cabin.name}'
                       ,${cabin.maxCapacity},${cabin.regularPrice},${cabin.discount},'${cabin.description}','${cabin.cabinImage}')`;
@@ -30,10 +34,13 @@ export class CabinRepo {
             `INSERT into cabinfeatures(cabinID,featureID) VALUES (${cabin.id},${feature})`
         );
         const promises = queries.map((query) => addModel(query));
+        await beginTransaction();
         await Promise.all(promises);
+        await commit();
       }
       return res;
     } catch (error) {
+      await rollback();
       throw error;
     }
   }

@@ -140,7 +140,7 @@ insert into orderitems values(2,5,2);
 create table admin(
     id bigint primary key,
 	name varchar(1000),
-    email varchar(100),
+    email varchar(100) UNIQUE,
     password varchar(1000),
     role varchar(1000)
 );

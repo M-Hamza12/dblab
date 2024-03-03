@@ -1,10 +1,16 @@
+import { OkPacket } from 'mysql';
 import { mySqlConnection } from '..';
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
+import { IBookingDate } from '../Interface/interface';
 export function fetchModel<T>(query: string): Promise<T> {
   return new Promise((resolve, reject) => {
-    mySqlConnection.query(query, (err, rows) => {
-      if (err) reject(err);
-      else resolve(rows);
-    });
+    mySqlConnection.query(
+      query,
+      (err: any, rows: RowDataPacket | RowDataPacket[]) => {
+        if (err) reject(err);
+        else resolve(rows as T);
+      }
+    );
   });
 }
 
@@ -40,18 +46,15 @@ export function deleteModel(query: string): Promise<string> {
 export function getFutureBookingProcedure(
   cabinId: number,
   date: string
-): Promise<{
-  startDate: Date;
-  endDate: Date;
-}> {
+): Promise<IBookingDate> {
   return new Promise((resolve, reject) => {
     mySqlConnection.query(
       `call GetFutureBookingsForCabin(${cabinId},'${date}');`,
-      (error, rows) => {
+      (error: any, rows: RowDataPacket | RowDataPacket[]) => {
         if (error) {
           reject(error);
         }
-        resolve(rows);
+        resolve(rows as IBookingDate);
       }
     );
   });

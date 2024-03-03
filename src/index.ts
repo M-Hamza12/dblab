@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import mysql from 'mysql';
+import mysql from 'mysql2';
 import cors from 'cors';
 
 dotenv.config({
@@ -8,7 +8,7 @@ dotenv.config({
 });
 
 console.log(
-  process.env.AWS_ACCESS_KEY,
+  process.env.DB_PASSWORD,
   process.env.AWS_SECRET_ACCESS_KEY,
   process.env.AWS_REGION
 );
@@ -50,11 +50,11 @@ app.use('/api/v1/order', orderRouter);
 app.use('/api/v1/admin', adminRouter);
 
 export const mySqlConnection = mysql.createConnection({
-  host: 'localhost',
-  port: 3306,
-  password: '',
-  user: 'root',
-  database: 'dblab',
+  host: process.env.DB_HOST ?? 'localhost',
+  port: Number(process.env.DB_PORT) ?? 3306,
+  password: process.env.DB_PASSWORD ?? '',
+  user: process.env.DB_USER ?? 'root',
+  database: process.env.DB ?? 'dblab',
 });
 
 mySqlConnection.connect((error) => {

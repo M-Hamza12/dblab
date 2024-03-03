@@ -172,3 +172,8 @@ export interface Iadmin {
   confirmPassword: string;
   token?: string;
 }
+
+export interface IBookingDate {
+  startDate: Date;
+  endDate: Date;
+}
